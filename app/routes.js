@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: Apache-2.0
 
-var parsel = require('./controller.js');
+var parsel = require('./controller1.js');
 
 module.exports = function(app){
 

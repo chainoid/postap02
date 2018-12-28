@@ -85,99 +85,54 @@
 
   <div id="body">
 
-
-    <!--  Get all groups from repository-->
+    <!--  Get all parsels from parsel channel-->
     <div class="form-group">
-      <label>Query All Groups in Squadrone</label>
-      <p><input id="queryAllGroups" type="submit" value="Query Group" class="btn btn-success" ng-click="queryAllGroups()"></p>
+      <label>Query All Parsels in System</label>
+      <p><input id="queryAllParsels" type="submit" value="Query" class="btn btn-success" ng-click="queryAllParsels()"></p>
     </div>
 
-    <table id="all_groups" class="table" align="center">
+
+    <div class="alert alert-danger" role="alert" id="error_query_all">
+      Error of query request
+    </div>
+
+    <table id="all_parsels" class="table" align="center">
       <tr>
         <th>ID</th>
-        <th>GroupName</th>
-        <th>GroupDescription</th>
-      </tr>
-      <tr ng-repeat="group in all_groups">
-        <td>{{group.Key}}</td>
-        <td>{{group.groupName}}</td>
-        <td>{{group.description}}</td>
-      </tr>
-    </table>
-
-    <!--  Add new group into repository-->
-    <div class="form-group">
-      <label>Add new group into squadrone</label><br>
-      <h5 style="color:red;margin-bottom:2%" id="error_add_group">Error: Please enter a valid group data.</h5>
-      <h5 style="color:green;margin-bottom:2%" id="success_add_group">The new croup added successfully.</h5>
-      Enter a group name: <input id="groupName" class="form-control input-field" type="text" placeholder="Ex: "
-        ng-model="newGroup.groupName">
-      Enter a description: <input id="groupDesc" class="form-control input-field" type="text" placeholder="Ex: Description"
-        ng-model="newGroup.description">
-      <input id="addGroup" type="submit" value="Add Group" class="btn btn-warning" ng-click="addGroup()">
-    </div>
-
-    <!--  Query all user in organizatione-->
-    <div class="form-group">
-      <label>All Fighters in Squadrone</label>
-      <p><input id="queryAllUsers" type="submit" value="Query fighters" class="btn btn-success" ng-click="queryAllUsers()"></p>
-    </div>
-
-    <table id="all_users" class="table" align="center">
-      <tr>
-        <th>ID</th>
-        <th>Fighter Id</th>
-        <th>Fighter Name</th>
-        <th>Group</th>
-        <th>Description</th>
-        <th>Register TS</th>
-        <th>Test Record</th>
-      </tr>
-      <tr ng-repeat="user in all_users">
-        <td>{{user.Key}}</td>
-        <td>{{user.userId}}</td>
-        <td>{{user.userName}}</td>
-        <td>{{user.groupName}}</td>
-        <td>{{user.description}}</td>
-        <td>{{user.registerTS}}</td>
-        <td> Test Record </td>
+        <th>Sender ID</th>
+        <th>Sender TS</th>
+        <th>Sender Branch</th>
+        <th>Courier ID</th>
+        <th>Courier TS</th>
+        <th>Receiver ID</th>
+        <th>Receiver Branch</th>
+        <th>Receiver TS</th>
+        <th></th>
+      <tr ng-repeat="parsel in all_parsels">
+        <td>{{parsel.Key}}</td>
+        <td>{{parsel.senderId}}</td>
+        <td>{{parsel.senderTS}}</td>
+        <td>{{parsel.senderBranch}}</td>
+        <td>{{parsel.courierId}}</td>
+        <td>{{parsel.courierTS}}</td>
+        <td>{{parsel.receiverId}}</td>
+        <td>{{parsel.receiverBranch}}</td>
+        <td>{{parsel.receiverTS}}</td>
+        <td>  <!-- Action button -->
+          <div class="dropdown">
+          <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Action
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="index.html"> Accept</a> <br/>
+            <a class="dropdown-item" href="service.html"> Tranfer</a> <br/>
+            <a class="dropdown-item" href="clients.html"> Return</a> <br/>
+            <a class="dropdown-item" href="accounts.html"> Delivery</a> <br/>
+            <a class="dropdown-item" href="accounts.html"> History</a> <br/>
+          </div>
+        </div></td>
       </tr>
     </table>
-
-    <!--  Add the user into repository-->
-    <div class="form-group">
-      <label>Add fighter into repository</label><br>
-      <h5 style="color:red;margin-bottom:2%" id="error_add_user">Error: Please enter a valid fighter data</h5>
-      <h5 style="color:green;margin-bottom:2%" id="success_add_user">Congratulation: The new fighter has been added
-        to repository!</h5>
-
-      Enter a fighter Id ( or scan the QR/token ): <input id="createId" class="form-control input-field" type="text"
-        placeholder="Ex: A5V7A01" ng-model="user.userId">
-      Enter a fighter name: <input id="userName" class="form-control input-field" name="assetSelect2" type="text"
-        placeholder="Ex: Smith" ng-model="user.userName">
-      Enter a group name: <input id="groupName" class="form-control input-field" name="assetSelect3" type="text"
-        placeholder="Ex: AB01" ng-model="user.groupName">
-      Enter a description: <input id="groupDesc" class="form-control input-field" type="text" placeholder="Ex: Description"
-        ng-model="user.description">
-      <input id="addUserId" type="submit" value="Add Fighter" class="btn btn-warning" ng-click="addUser()">
-    </div>
-    
-    <!--  Create one item worksheet for whole group -->
-    <div class="form-group">
-       <label>Generate empty group's item list and put into Ledger</label>
-        <br>
-        <h5 style="color:green;margin-bottom:2%" id="success_generated">Success! Tx ID: {{generated_set_for_group}}</h5>
-        <h5 style="color:red;margin-bottom:2%" id="error_generated">Error: Please enter a valid data</h5>
-        <!--Enter a new key(initial number for group): <input class="form-control input-field" placeholder="Ex: 021"
-          ng-model="generator.key"> -->
-        Enter a group name (from available list above): <input class="form-control input-field" placeholder="Ex: AB17"
-          ng-model="generator.groupName">
-        Enter item name: <input class="form-control input-field" name="assetSelect" placeholder="Ex: Belt" ng-model="generator.itemName">
-        Enter deliveryman name: <input class="form-control input-field" name="assetSelect" placeholder="Ex: Smith" ng-model="generator.deliveryMan">
-        <!-- TBD: The delivery deadline: <input class="form-control input-field" name="assetSelect" placeholder="Ex: 2014090811" ng-model="generator.deadlineTS"> -->
-        <input id="generateSetForGroupId" type="submit" value="Generate" class="btn btn-warning" ng-click="generateSetForGroup()">
-     </div>
-
 
      <div class="dropdown">
       <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

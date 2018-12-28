@@ -7,8 +7,12 @@ var app = angular.module('application', []);
 // Angular Controller
 app.controller('appController', function ($scope, appFactory) {
 
-	// Intendant page
-	$("#all_groups").hide();
+	// Parsel page
+	$("#all_parsels").hide();
+
+	$("#error_query_all").hide();
+
+
 	$("#all_users").hide();
 
 	$("#error_add_group").hide();
@@ -45,20 +49,39 @@ app.controller('appController', function ($scope, appFactory) {
 
 	$("#take_form").hide();
 
-	$scope.queryAllGroups = function () {
+	$scope.queryAllParsels = function(){
 
-		appFactory.queryAllGroups(function (data) {
+		appFactory.queryAllParsels(function(data){
+
+			$scope.query_all_parsels = data;
+
+			if ($scope.query_all_parsels == "Error of query request"){
+				console.log()
+				$("#error_query_all").show();
+				$("#all_parsels").hide();
+				
+			} else{
+				$("#all_parsels").show();
+				$("#error_query_all").hide();
+			
 			var array = [];
-			for (var i = 0; i < data.length; i++) {
+			for (var i = 0; i < data.length; i++){
+				//parseInt(data[i].Key);
 				data[i].Record.Key = data[i].Key;
 				array.push(data[i].Record);
 			}
 			array.sort(function(a, b) {
-			    return a.groupName.localeCompare(b.groupName);
+			    return a.senderTS.localeCompare(b.senderTS);
 			});
-			$scope.all_groups = array;
-			$("#all_groups").show();
+			$scope.all_parsels = array;
+		  }
 		});
+
+		$("#history_parsel").hide();
+		$("#query_parsel").hide();
+		$("#sender_parsels").hide();
+
+		$("#all_parsels").show();
 	}
 
 	$scope.addGroup = function () {
@@ -216,9 +239,9 @@ app.factory('appFactory', function ($http) {
 
 	var factory = {};
 
-	factory.queryAllGroups = function (callback) {
+	factory.queryAllParsels = function (callback) {
 
-		$http.get('/get_all_groups/').success(function (output) {
+		$http.get('/get_all_parsels/').success(function (output) {
 			callback(output)
 		});
 	}

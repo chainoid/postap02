@@ -34,10 +34,12 @@ type SmartContract struct {
 Structure tags are used by encoding/json library
 */
 type Parsel struct {
-	Sender         string `json:"sender"`
+	SenderId       string `json:"senderId"`
 	SenderTS       string `json:"senderTS"`
 	SenderBranch   string `json:"senderBranch"`
-	Receiver       string `json:"receiver"`
+	CourierId      string `json:"courierId"`
+	CourierTS      string `json:"courierTS"` 
+	ReceiverId     string `json:"receiverId"`
 	ReceiverTS     string `json:"receiverTS"`
 	ReceiverBranch string `json:"receiverBranch"`
 }
@@ -47,7 +49,7 @@ type Parsel struct {
 */
 func randomId() string {
 
-	// Call Seed, using current nanoseconds.
+  // Call Seed, using current nanoseconds.
   rand.Seed(int64(time.Now().Nanosecond()))
   // Random int will be different each program execution.
   value := rand.Int63()
@@ -87,8 +89,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.deliveryParsel(APIstub, args)
 	} else if function == "querySender" {
 		return s.querySender(APIstub, args)
-	} else if function == "historyRecord" {
-		return s.historyRecord(APIstub, args)
+	} else if function == "historyParsel" {
+		return s.historyParsel(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -99,21 +101,21 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
  Will add test data (5 parsels)to our network
 */
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
-	parsel := []Parsel{
-		Parsel{Sender: "Alex", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "001", Receiver: "Miriam", ReceiverTS: "", ReceiverBranch: "101"},
-		Parsel{Sender: "Ben", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "002", Receiver: "Elvis", ReceiverTS: "", ReceiverBranch: "102"},
-		Parsel{Sender: "Charly", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "003", Receiver: "Elvis", ReceiverTS: "", ReceiverBranch: "103"},
-		Parsel{Sender: "Elvis", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "005", Receiver: "Alex", ReceiverTS: "", ReceiverBranch: "105"},
-		Parsel{Sender: "Sega", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "005", Receiver: "Mary", ReceiverTS: "", ReceiverBranch: "105"},
+	parsels := []Parsel{
+		Parsel{SenderId: "A1", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "001", CourierId: "INIT", CourierTS: "",  ReceiverId: "M01", ReceiverTS: "", ReceiverBranch: "101"},
+		Parsel{SenderId: "A2", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "002", CourierId: "", CourierTS: "",  ReceiverId: "MR2", ReceiverTS: "", ReceiverBranch: "201"},
+		Parsel{SenderId: "A3", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "003", CourierId: "", CourierTS: "",  ReceiverId: "MR3", ReceiverTS: "", ReceiverBranch: "301"},
+		Parsel{SenderId: "A4", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "004", CourierId: "", CourierTS: "",  ReceiverId: "MR4", ReceiverTS: "", ReceiverBranch: "301"},
+    	Parsel{SenderId: "A4", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "005", CourierId: "", CourierTS: "",  ReceiverId: "MR5", ReceiverTS: "", ReceiverBranch: "101"},
 	}
 
 	i := 0
-	for i < len(parsel) {
+	for i < len(parsels) {
 		fmt.Println("i is ", i)
-		parselAsBytes, _ := json.Marshal(parsel[i])
+		parselAsBytes, _ := json.Marshal(parsels[i])
 
 		APIstub.PutState(randomId(), parselAsBytes)
-		fmt.Println("Added", parsel[i])
+		fmt.Println("Added", parsels[i])
 		i = i + 1
 	}
 
@@ -149,20 +151,20 @@ func (s *SmartContract) queryParsel(APIstub shim.ChaincodeStubInterface, args []
 
 func (s *SmartContract) acceptParsel(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 4 {
-		return shim.Error("Incorrect number of arguments. Expecting 4")
-	}
+	// if len(args) != 4 {
+	// 	return shim.Error("Incorrect number of arguments. Expecting 4")
+	// }
 
-	var parsel = Parsel{Sender: args[0], SenderBranch: args[1], SenderTS: time.Now().Format(time.RFC3339), Receiver: args[2], ReceiverBranch: args[3], ReceiverTS: ""}
+	// var parsel = Parsel{Sender: args[0], SenderBranch: args[1], SenderTS: time.Now().Format(time.RFC3339), Receiver: args[2], ReceiverBranch: args[3], ReceiverTS: ""}
 
-	parselAsBytes, _ := json.Marshal(parsel)
-	err := APIstub.PutState(randomId(), parselAsBytes)
+	// parselAsBytes, _ := json.Marshal(parsel)
+	// err := APIstub.PutState(randomId(), parselAsBytes)
 
-	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to record new parsel: %s", args[0]))
-	}
+	// if err != nil {
+	// 	return shim.Error(fmt.Sprintf("Failed to record new parsel: %s", args[0]))
+	// }
 
-	fmt.Printf("- acceptParsel:\n%s\n", parselAsBytes)
+	// fmt.Printf("- acceptParsel:\n%s\n", parselAsBytes)
 
 	return shim.Success(nil)
 }
@@ -250,8 +252,8 @@ func (s *SmartContract) querySender(APIstub shim.ChaincodeStubInterface, args []
 		// Unmarshal record to parsel
 		json.Unmarshal(queryResponse.Value, &parsel)
 
-		// Add only filtered ny sender records
-		if parsel.Sender == args[0] {
+		// Add only filtered by sender records
+		if parsel.SenderId == args[0] {
 
 			// Add comma before array members,suppress it for the first array member
 			if bArrayMemberAlreadyWritten == true {
@@ -328,7 +330,7 @@ func (s *SmartContract) deliveryParsel(APIstub shim.ChaincodeStubInterface, args
 /*
  * The getHistoryForKey method *
  */
-func (s *SmartContract) historyRecord(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) historyParsel(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	resultsIterator, err := APIstub.GetHistoryForKey(args[0])
 
