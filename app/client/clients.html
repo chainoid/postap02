@@ -121,35 +121,18 @@
     </tr>
   </table>
 
-      <div class="form-group">
-        <label>Query Fighter's Record</label><br>
-        <h5 style="color:red;margin-bottom:2%" id="error_user_record">Error: Record(s) for selected user not found</h5>
-               Enter a fighter ID: <input id="studentName" class="form-control input-field" type="text" placeholder="Ex: 365A858149C6E2D1" ng-model="id">
-
-        <input id="getUserRecordId" type="submit" value="Query" class="btn btn-success" ng-click="getUserRecord()">
-        </div>
-
-        <table id="user_record" class="table" align="center">
-
-          <tr>
-            <th>Record type</th>
-            <th>Group</th>
-            <th>Fighter ID</th>
-            <th>Fighter name</th>
-            <th>Registered</th> 
-          </tr>
-  
-          <tr>
-            <td>{{user_record.recordType}}</td>
-            <td>{{user_record.groupName}}</td>
-            <td>{{user_record.userId}}</td>
-            <td>{{user_record.userName}}</td>
-            <td>{{user_record.registerTS}}</td> 
-          </tr>
-        </table>
-
+  <div class="form-group">
+      <label>Add client into System</label><br/>
+      <div class="alert alert-success" role="alert" id="success_add_client">
+        Success! Tx ID: {{accepted_client_id}}
+      </div>
+      Name: <input class="form-control input-field" type="text" placeholder=" Ex: John" ng-model="client.name"> 
+      Address: <input class="form-control input-field" type="text" placeholder=" Ex: Main str. 34" ng-model="client.address">
+      Phone: <input class="form-control input-field" type="text" placeholder=" 380-45-55" ng-model="client.phone">
+      Branch: <input class="form-control input-field" type="text" placeholder=" Ex: 003" ng-model="client.branchId">
+      <input id="addClientId" type="submit" value="Add client" class="btn btn-warning" ng-click="addClient()">
+    </div>
       
-
       <div class="dropdown">
         <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Switch to Page

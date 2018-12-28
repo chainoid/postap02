@@ -7,10 +7,12 @@ var app = angular.module('application', []);
 // Angular Controller
 app.controller('appController', function ($scope, appFactory) {
 
-	// Intendant page
+	// Client's page
 	$("#error_query_all").hide();
 	$("#all_clients").hide();
 
+	$("#success_add_client").hide();
+	
 	//$("#error_add_group").hide();
 	//$("#success_add_group").hide();
 
@@ -39,8 +41,7 @@ app.controller('appController', function ($scope, appFactory) {
 
 		appFactory.queryAllClients(function (data) {
 
-
-			if ($scope.query_all_clientss == "Error of query request"){
+			if ($scope.query_all_clients == "Error of query request"){
 				console.log()
 				$("#error_query_all").show();
 				$("#all_clients").hide();
@@ -62,53 +63,13 @@ app.controller('appController', function ($scope, appFactory) {
 		});
 	}
 
-	$scope.addGroup = function () {
+    $scope.addClient = function () {
 
-		appFactory.addGroup($scope.newGroup, function (data) {
-
-			if (data == "Could not locate unpassed test") {
-				$("#error_add_group").show();
-				$("#success_add_group").hide();
-			} else {
-				$("#error_add_group").hide();
-				$("#success_add_group").show();
-			}
-
-			$scope.exam_result = data;
+		appFactory.addClient($scope.client, function(data){
+			$scope.accepted_client_id = data;
+			$("#success_add_client").show();
 		});
 	}
-
-    $scope.addUser = function () {
-
-		appFactory.addUser($scope.user, function (data) {
-
-			if (data == "Could not locate unpassed test") {
-				$("#error_add_user").show();
-				$("#success_add_user").hide();
-			} else {
-				$("#error_add_user").hide();
-				$("#success_add_user").show();
-			}
-
-			$scope.exam_result = data;
-		});
-	}
-
-	// $scope.queryAllUsers = function () {
-
-	// 	appFactory.queryAllUsers(function (data) {
-	// 		var array = [];
-	// 		for (var i = 0; i < data.length; i++) {
-	// 			data[i].Record.Key = data[i].Key;
-	// 			array.push(data[i].Record);
-	// 		}
-	// 		array.sort(function (a, b) {
-	// 			return a.name.localeCompare(b.name);
-	// 		});
-	// 		$scope.all_users = array;
-	// 		$("#all_users").show();
-	// 	});
-	// }
 
 	$scope.generateSetForGroup = function () {
 
@@ -145,35 +106,6 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#user_record").show();
 				$("#user_record2").show();
 			}
-		});
-	}
-
-	$scope.prepareForDelivery = function () {
-
-		var order = $scope.order;
-
-		appFactory.prepareForDelivery(order, function (data) {
-
-			if (data == "No group/item found") {
-				console.log("No group/item found");
-				$("#error_prepare_delivery").show();
-				$("#item_list").hide();
-			
-			} else {
-				$("#error_prepare_delivery").hide();
-				$("#item_list").show();
-				$("#take_form").hide(); 
-			}
-
-			var array = [];
-			for (var i = 0; i < data.length; i++) {
-				data[i].Record.Key = data[i].Key;
-				array.push(data[i].Record);
-			}
-			array.sort(function (a, b) {
-				return parseFloat(a.Key) - parseFloat(b.Key);
-			});
-			$scope.item_list = array;
 		});
 	}
 
@@ -224,31 +156,15 @@ app.factory('appFactory', function ($http) {
 		});
 	}
 
+	factory.addClient = function (data, callback) {
 
-	factory.addGroup = function (data, callback) {
+		var client = data.name + "-" + data.address + "-" + data.phone + "-" + data.branchId;
 
-		var newGroup =  data.groupName + "-" + data.description;
-
-		$http.get('/add_group/' + newGroup).success(function (output) {
+		$http.get('/add_client/' + client).success(function (output) {
 			callback(output)
 		});
 	}
 
-
-	factory.addUser = function (data, callback) {
-
-		var user = data.userId + "-" + data.userName + "-" + data.groupName + "-" + data.description;
-
-		$http.get('/add_user/' + user).success(function (output) {
-			callback(output)
-		});
-	}
-
-	// factory.queryAllUsers = function (callback) {
-	// 	$http.get('/query_all_users/').success(function (output) {
-	// 		callback(output)
-	// 	});
-	// }
 	
 	factory.generateSetForGroup = function (generator, callback) {
 
@@ -261,15 +177,6 @@ app.factory('appFactory', function ($http) {
 
 	factory.getUserRecord = function (id, callback) {
 		$http.get('/get_user_record/' + id).success(function (output) {
-			callback(output)
-		});
-	}
-
-	factory.prepareForDelivery = function (exam, callback) {
-
-		var params = exam.group + "-" + exam.course;
-
-		$http.get('/prepare_for_delivery/' + params).success(function (output) {
 			callback(output)
 		});
 	}

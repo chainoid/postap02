@@ -76,11 +76,42 @@
     <div id="body">
 
       <div class="form-group">
-        <label>Prepare the empty item list for selected group and item</label><br>
-        <h5 style="color:red;margin-bottom:2%" id="error_prepare_delivery">Error: Please enter a valid group/item data</h5>
-         Enter a group name:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: AB17" ng-model="order.group">
-         Enter a item name: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Boots" ng-model="order.course">
-        <input id="prepareForDeliveryId" type="submit" value="Query" class="btn btn-warning" ng-click="prepareForDelivery()">
+            <label>Create the Parsel Order</label><br>
+            
+            <div class="alert alert-danger" role="alert" id="error_serder_receiver_id">
+                Error of Sender and(or) Receiver Id
+            </div>
+            
+             Enter a Sender Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB17" ng-model="order.senderId">
+             Enter a Receiver Id: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: 8FE0789" ng-model="order.receiverId">
+            <input id="prepareForDeliveryId" type="submit" value="Create order" class="btn btn-warning" ng-click="createParselOrder()">
+      </div>
+
+
+      <div class="form-group">
+          <label>Accept the Parsel</label><br>
+          <h5 style="color:red;margin-bottom:2%" id="error_prepare_delivery">Error: Please enter a valid group/item data</h5>
+           Enter a group name:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: AB17" ng-model="order.group">
+           Enter a item name: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Boots" ng-model="order.course">
+          <input id="prepareForDeliveryId" type="submit" value="Switch Courier" class="btn btn-warning" ng-click="switchCourier()">
+      </div>
+
+      
+      <div class="form-group">
+          <label>Switch Parsel to next Courier</label><br>
+          <h5 style="color:red;margin-bottom:2%" id="error_prepare_delivery">Error: Please enter a valid parsel Id</h5>
+           Enter the Parsel Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB4177F6" ng-model="switch.parselId">
+           Enter the Next Courier Id<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 or Id" ng-model="switch.courierId">
+          <input id="prepareForDeliveryId" type="submit" value="Query" class="btn btn-warning" ng-click="prepareForDelivery()">
+      </div>
+
+
+      <div class="form-group">
+          <label>Delivery Parsel to Receiver</label><br>
+          <h5 style="color:red;margin-bottom:2%" id="error_prepare_delivery">Error: Please enter a valid group/item data</h5>
+           Enter a group name:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: AB17" ng-model="order.group">
+           Enter a item name: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Boots" ng-model="order.course">
+          <input id="prepareForDeliveryId" type="submit" value="Query" class="btn btn-warning" ng-click="prepareForDelivery()">
       </div>
 
       <table id="item_list" class="table" align="center">
@@ -141,5 +172,5 @@
     </div>
   </body>
     <!-- requiring the angular page -->
-    <script type="text/javascript" src="app2.js"> </script>
+    <script type="text/javascript" src="app3.js"> </script>
 </html>

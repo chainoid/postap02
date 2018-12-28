@@ -199,20 +199,20 @@ func (s *SmartContract) queryClient(APIstub shim.ChaincodeStubInterface, args []
 
 func (s *SmartContract) addClient(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	// if len(args) != 4 {
-	// 	return shim.Error("Incorrect number of arguments. Expecting 4")
-	// }
+	 if len(args) != 4 {
+	 	return shim.Error("Incorrect number of arguments. Expecting 4")
+	 }
 
-	// var client = Parsel{Sender: args[0], SenderBranch: args[1], SenderTS: time.Now().Format(time.RFC3339), Receiver: args[2], ReceiverBranch: args[3], ReceiverTS: ""}
+	 var client = Client{Name: args[0], Address: args[1], Phone: args[2], BranchId: args[3], Rate: 0}
 
-	// clientAsBytes, _ := json.Marshal(client)
-	// err := APIstub.PutState(randomId(), clientAsBytes)
+	 clientAsBytes, _ := json.Marshal(client)
+	 err := APIstub.PutState(randomId(), clientAsBytes)
 
-	// if err != nil {
-	// 	return shim.Error(fmt.Sprintf("Failed to record new client: %s", args[0]))
-	// }
+	if err != nil {
+	 	return shim.Error(fmt.Sprintf("Failed to record new client: %s", args[0]))
+	}
 
-	// fmt.Printf("- addClient:\n%s\n", clientlAsBytes)
+	fmt.Printf("- addClient:\n%s\n", clientAsBytes)
 
 	return shim.Success(nil)
 }

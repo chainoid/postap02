@@ -81,8 +81,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.queryParsel(APIstub, args)
 	} else if function == "initLedger" {
 		return s.initLedger(APIstub)
-	} else if function == "acceptParsel" {
-		return s.acceptParsel(APIstub, args)
+	} else if function == "createParselOrder" {
+		return s.createParselOrder(APIstub, args)
 	} else if function == "queryAllParsels" {
 		return s.queryAllParsels(APIstub)
 	} else if function == "deliveryParsel" {
@@ -144,27 +144,24 @@ func (s *SmartContract) queryParsel(APIstub shim.ChaincodeStubInterface, args []
 }
 
 /*
-  * The acceptParsel method *TxId           string `json:"txId"`
-	In the Post office would TxId           string `json:"txId"`
-	This method takes in fiveTxId           string `json:"txId"`edger).
+  * The createParselOrder method
 */
+func (s *SmartContract) createParselOrder(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-func (s *SmartContract) acceptParsel(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	 if len(args) != 4 {
+	 	return shim.Error("Incorrect number of arguments. Expecting 4")
+	 }
 
-	// if len(args) != 4 {
-	// 	return shim.Error("Incorrect number of arguments. Expecting 4")
-	// }
+	 var parsel = Parsel{SenderId: args[0], SenderBranch: args[1], SenderTS: time.Now().Format(time.RFC3339), ReceiverId: args[2], ReceiverBranch: args[3], ReceiverTS: "", CourierId: "", CourierTS:"" }
 
-	// var parsel = Parsel{Sender: args[0], SenderBranch: args[1], SenderTS: time.Now().Format(time.RFC3339), Receiver: args[2], ReceiverBranch: args[3], ReceiverTS: ""}
+	 parselAsBytes, _ := json.Marshal(parsel)
+	 err := APIstub.PutState(randomId(), parselAsBytes)
 
-	// parselAsBytes, _ := json.Marshal(parsel)
-	// err := APIstub.PutState(randomId(), parselAsBytes)
+	  if err != nil {
+	 	return shim.Error(fmt.Sprintf("Failed to record new parsel: %s", args[0]))
+	 }
 
-	// if err != nil {
-	// 	return shim.Error(fmt.Sprintf("Failed to record new parsel: %s", args[0]))
-	// }
-
-	// fmt.Printf("- acceptParsel:\n%s\n", parselAsBytes)
+	fmt.Printf("- createParselOrder:\n%s\n", parselAsBytes)
 
 	return shim.Success(nil)
 }

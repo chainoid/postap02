@@ -45,19 +45,19 @@ app.controller('appController', function ($scope, appFactory) {
 
 	$("#take_form").hide();
 
-	$scope.queryAllGroups = function () {
+	$scope.createParselOrder = function () {
 
-		appFactory.queryAllGroups(function (data) {
-			var array = [];
-			for (var i = 0; i < data.length; i++) {
-				data[i].Record.Key = data[i].Key;
-				array.push(data[i].Record);
+		appFactory.createParselOrder($scope.order, function (data) {
+			
+			if (data == "Cannot find sender/receiver") {
+				$("#error_serder_receiver_id").show();
+				$("#success_create_order").hide();
+			} else {
+				$("#error_serder_receiver_id").hide();
+				$("#success_create_order").show();
 			}
-			array.sort(function(a, b) {
-			    return a.groupName.localeCompare(b.groupName);
-			});
-			$scope.all_groups = array;
-			$("#all_groups").show();
+
+			$scope.order_result = data;
 		});
 	}
 
