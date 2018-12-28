@@ -81,9 +81,13 @@
             <div class="alert alert-danger" role="alert" id="error_serder_receiver_id">
                 Error of Sender and(or) Receiver Id
             </div>
-            
-             Enter a Sender Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB17" ng-model="order.senderId">
-             Enter a Receiver Id: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: 8FE0789" ng-model="order.receiverId">
+           
+            <div class="alert alert-success" role="alert" id="success_create_order">
+              Success! Tx ID: {{create_order_result}}
+            </div>
+
+             Sender Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB17" ng-model="order.senderId">
+             Receiver Id: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: 8FE0789" ng-model="order.receiverId">
             <input id="prepareForDeliveryId" type="submit" value="Create order" class="btn btn-warning" ng-click="createParselOrder()">
       </div>
 
@@ -100,9 +104,9 @@
       <div class="form-group">
           <label>Switch Parsel to next Courier</label><br>
           <h5 style="color:red;margin-bottom:2%" id="error_prepare_delivery">Error: Please enter a valid parsel Id</h5>
-           Enter the Parsel Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB4177F6" ng-model="switch.parselId">
-           Enter the Next Courier Id<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 or Id" ng-model="switch.courierId">
-          <input id="prepareForDeliveryId" type="submit" value="Query" class="btn btn-warning" ng-click="prepareForDelivery()">
+           Parsel Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB4177F6" ng-model="switch.parselId">
+           Next Courier Id<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 or Id" ng-model="switch.courierId">
+          <input id="prepareForDeliveryId" type="submit" value="Query" class="btn btn-warning" ng-click="switchCourier()">
       </div>
 
 

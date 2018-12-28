@@ -7,7 +7,13 @@ var app = angular.module('application', []);
 // Angular Controller
 app.controller('appController', function ($scope, appFactory) {
 
-	// Intendant page
+	// Create parsel order
+	$("#error_serder_receiver_id").hide();
+	$("#success_create_order").hide();
+
+
+
+	// OLD Intendant page
 	$("#all_groups").hide();
 	$("#all_users").hide();
 
@@ -32,10 +38,6 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#error_student_record").hide();
 	$("#item_list").hide();
 	
-	
-	$("#error_old_exam").hide();
-	$("#success_delivery").hide();
-
 	// Fighter page	
 	$("#error_user_record").hide();
 	$("#user_record").hide();
@@ -57,23 +59,23 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#success_create_order").show();
 			}
 
-			$scope.order_result = data;
+			$scope.create_order_result = data;
 		});
 	}
 
-	$scope.addGroup = function () {
+	$scope.switchCourier = function () {
 
-		appFactory.addGroup($scope.newGroup, function (data) {
+		appFactory.switchCourier($scope.switch, function (data) {
 
-			if (data == "Could not locate unpassed test") {
-				$("#error_add_group").show();
-				$("#success_add_group").hide();
+			if (data == "Could not locate parsel") {
+				$("#error_switch_courier").show();
+				$("#success_switch_courier").hide();
 			} else {
-				$("#error_add_group").hide();
-				$("#success_add_group").show();
+				$("#error_switch_courier").hide();
+				$("#success_switch_courier").show();
 			}
 
-			$scope.exam_result = data;
+			$scope.switch_courier_result = data;
 		});
 	}
 
@@ -222,39 +224,30 @@ app.factory('appFactory', function ($http) {
 			callback(output)
 		});
 	}
+	
+	factory.deliveryItem = function (input, callback) {
 
+		var params = input.userId + "-" + input.itemName + "-" + input.rate;
 
-	factory.addGroup = function (data, callback) {
-
-		var newGroup =  data.groupName + "-" + data.description;
-
-		$http.get('/add_group/' + newGroup).success(function (output) {
-			callback(output)
-		});
-	}
-
-
-	factory.addUser = function (data, callback) {
-
-		var user = data.userId + "-" + data.userName + "-" + data.groupName + "-" + data.description;
-
-		$http.get('/add_user/' + user).success(function (output) {
-			callback(output)
-		});
-	}
-
-	factory.queryAllUsers = function (callback) {
-
-		$http.get('/query_all_users/').success(function (output) {
+		$http.get('/delivery_item/' + params).success(function (output) {
 			callback(output)
 		});
 	}
 	
-	factory.generateSetForGroup = function (generator, callback) {
+	factory.createParselOrder = function (data, callback) {
 
-		var generator = generator.groupName + "-" + generator.itemName + "-" + generator.deliveryMan;
+		var order = data.senderId + "-" + data.receiverId + "-" + "-" + "-";
 
-		$http.get('/generate_set_for_group/' + generator).success(function (output) {
+		$http.get('/create_parsel_order/' + order).success(function (output) {
+			callback(output)
+		});
+	}
+
+	factory.switchCourier = function (input, callback) {
+
+		var params = input.parselId + "-" + input.courierId;
+
+		$http.get('/switch_courier/' + params).success(function (output) {
 			callback(output)
 		});
 	}

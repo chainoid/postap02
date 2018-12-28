@@ -28,7 +28,10 @@ module.exports = function(app){
   app.get('/add_client/:client', function(req, res){
     parsel.add_client(req, res);
   });
-  app.get('/create_order_parsel/:order', function(req, res){
-    parsel.add_client(req, res);
+  app.get('/create_parsel_order/:order', function(req, res){
+    parsel.create_parsel_order(req, res);
+  });
+  app.get('/switch_courier/:switch', function(req, res){
+    parsel.switch_courier(req, res);
   });
 }
