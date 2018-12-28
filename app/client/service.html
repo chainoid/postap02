@@ -1,0 +1,145 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Service suite</title>
+    <link rel="icon" href="favicon.png" type="image/gif">
+
+    <!-- Required meta tags -->
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+   <!-- require jquery and bootstrap scripts -->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+   <link rel="stylesheet" type="text/css" href="styles/styles.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+
+    <!-- adding style here -->
+    <style type="text/css">
+      header{
+        background-color: gold;
+        font-size:20px;
+        padding:15px;
+      }
+           
+      #body{
+        margin-left:3%;
+        margin-right:3%;
+      }
+      .form-control{
+        margin: 8px;
+      }
+      #right_header{
+        width:20%;
+        font-size:15px;
+        margin-right:0px;
+      }
+      #left_header{
+        margin-left:0;
+        width:40%;
+        display:inline-block;
+      }
+      #id {
+        width:49%;
+        display: inline-block;
+      }
+      table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+      }
+      td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+      }
+      tr:nth-child(even) {
+          background-color: #dddddd;
+      }
+
+      .input-field {
+          width: 200px;
+          padding: 6px 1px;
+          margin-left: 0px;
+      }
+    </style>
+  </head>
+  <body ng-app="application" ng-controller="appController">
+    <header class="my-header">
+      <div id="left_header">Parsel Delivery Service: Service page</div>
+      <i id="right_header">Secure parsel delivery system on the Hyperledger Fabric.</i>
+    </header>
+
+    <div id="body">
+
+      <div class="form-group">
+        <label>Prepare the empty item list for selected group and item</label><br>
+        <h5 style="color:red;margin-bottom:2%" id="error_prepare_delivery">Error: Please enter a valid group/item data</h5>
+         Enter a group name:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: AB17" ng-model="order.group">
+         Enter a item name: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Boots" ng-model="order.course">
+        <input id="prepareForDeliveryId" type="submit" value="Query" class="btn btn-warning" ng-click="prepareForDelivery()">
+      </div>
+
+      <table id="item_list" class="table" align="center">
+
+        <tr>
+          <th>ID</th>
+          <th>Item Id</th>
+          <th>Group</th>
+          <th>Fighter</th>
+          <th>Item</th>
+          <th>Deliveryman</th>
+          <th>Assigned Time</th>
+          <th>Delivery Time</th>
+          <th>Size</th>
+          <th>Action</th>
+        </tr>
+
+        <tr ng-repeat="item in item_list">
+          <td>{{item.Key}}</td>
+          <td>{{item.itemId}}</td>
+          <td>{{item.group}}</td>
+          <td>{{item.userName}}</td>
+          <td>{{item.itemName}}</td>
+          <td>{{item.deliveryMan}}</td>
+          <td>{{item.assignedTS}}</td>
+          <td>{{item.deliveryTS}}</td>
+          <td>{{item.rate}}</td>
+          <td><a  href="" ng-model="history_item" ng-click="beforeDeliveryItem(item)">Delivery Item</a></td>
+          
+        </tr>
+      </table>
+
+      <div class="form-group" id="take_form">
+        <label>Accept the delivery</label><br>
+        <h5 style="color:red;margin-bottom:2%" id="error_item_source">Error: Please enter a valid ID/item data for UNDELIVERED item</h5>
+        <!--h5 style="color:red;margin-bottom:2%"   id="error_old_exam">Error: The exam already passed.</h5-->
+        <h5 style="color:green;margin-bottom:2%" id="success_delivery">Congratulation: The delivery has been approved!</h5>
+         Enter a fighter unique Id: <input id="createName" class="form-control input-field" type="text" placeholder="Ex: AA01" ng-model="delicase.Key">
+         Enter a item name: <input class="form-control input-field" type="text" placeholder="Ex: Red Hat" ng-model="delicase.itemName">
+         Enter an item size:   <input class="form-control input-field" type="text" placeholder="Ex: 5" ng-model="delicase.rate">
+        <input id="deliveryItemId" type="submit" value="Accept delivery" class="btn btn-warning" ng-click="deliveryItem()">
+      </div>
+
+      <div class="dropdown">
+        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Switch to Page
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="index.html"> Main</a> <br/>
+          <a class="dropdown-item" href="parsels.html"> Parsels</a> <br/>
+          <a class="dropdown-item" href="clients.html"> Clients</a> <br/>
+          <a class="dropdown-item" href="accounts.html"> Accounts</a> <br/>
+        </div>
+      </div>
+      
+      <br/>
+
+    </div>
+  </body>
+    <!-- requiring the angular page -->
+    <script type="text/javascript" src="app2.js"> </script>
+</html>

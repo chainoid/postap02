@@ -1,0 +1,150 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Clients page</title>
+    <link rel="icon" href="favicon.png" type="image/gif">
+
+    <!-- Required meta tags -->
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+   <!-- require jquery and bootstrap scripts -->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+   <link rel="stylesheet" type="text/css" href="styles/styles.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+   
+    <!-- adding style here -->
+    <style type="text/css">
+      header{
+        background-color: gold;
+        font-size:20px;
+        padding:15px;
+      }
+          
+      #body{
+        margin-left:3%;
+        margin-right:3%;
+      }
+      .form-control{
+        margin: 8px;
+      }
+      #right_header{
+        width:20%;
+        font-size:15px;
+        margin-right:0px;
+      }
+      #left_header{
+        margin-left:0;
+        width:40%;
+        display:inline-block;
+      }
+      #id {
+        width:49%;
+        display: inline-block;
+      }
+
+      table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+      }
+      td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+      }
+      tr:nth-child(even) {
+          background-color: #dddddd;
+      }
+
+      .input-field {
+         width: 200px;
+         padding: 6px 1px;
+         margin-left: 0px;
+      }
+    </style>
+  </head>
+
+  <body ng-app="application" ng-controller="appController">
+    <header class="my-header">
+      <div id="left_header">Parsel Delivery Service: Clients page.</div>
+      <i id="right_header">Secure parsel delivery system on the Hyperledger Fabric.</i>
+    </header>
+
+    <div id="body">
+
+      <div class="form-group">
+        <label>Query Fighter's Record</label><br>
+        <h5 style="color:red;margin-bottom:2%" id="error_user_record">Error: Record(s) for selected user not found</h5>
+               Enter a fighter ID: <input id="studentName" class="form-control input-field" type="text" placeholder="Ex: 365A858149C6E2D1" ng-model="id">
+
+        <input id="getUserRecordId" type="submit" value="Query" class="btn btn-success" ng-click="getUserRecord()">
+        </div>
+
+        <table id="user_record" class="table" align="center">
+
+          <tr>
+            <th>Record type</th>
+            <th>Group</th>
+            <th>Fighter ID</th>
+            <th>Fighter name</th>
+            <th>Registered</th> 
+          </tr>
+  
+          <tr>
+            <td>{{user_record.recordType}}</td>
+            <td>{{user_record.groupName}}</td>
+            <td>{{user_record.userId}}</td>
+            <td>{{user_record.userName}}</td>
+            <td>{{user_record.registerTS}}</td> 
+          </tr>
+        </table>
+
+      <table id="user_record2" class="table" align="center">
+
+        <tr >
+          <th>Item Id</th>
+          <th>Figther</th> 
+          <th>Item</th>
+          <th>Deliveryman</th>
+          <th>Assigned TS</th>
+          <th>Size</th>
+          <th>Delivered</th>
+          <th>Description</th> 
+        </tr>
+
+        <tr ng-repeat="record in user_record.recordList">
+          <td>{{record.itemId}}</td>
+          <td>{{user_record.userName}}</td> 
+          <td>{{record.itemName}}</td>
+          <td>{{record.deliveryMan}}</td>
+          <td>{{record.assignedTS}}</td>
+          <td>{{record.rate}}</td>
+          <td>{{record.deliveryTS}}</td>
+          <td>{{record.deliveryDesc}}</td> 
+        </tr>
+      </table>
+
+      <div class="dropdown">
+        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Switch to Page
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="index.html"> Main</a> <br/>
+          <a class="dropdown-item" href="parsels.html"> Parsels</a> <br/>
+          <a class="dropdown-item" href="service.html"> Service</a> <br/>
+          <a class="dropdown-item" href="accounts.html"> Accounts</a> <br/>
+        </div>
+      </div>
+
+      <br/>
+
+    </div>
+  </body>
+    <!-- requiring the angular page -->
+    <script type="text/javascript" src="app3.js"> </script>
+</html>

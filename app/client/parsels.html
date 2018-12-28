@@ -1,0 +1,201 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Parsels suite</title>
+  <link rel="icon" href="favicon.png" type="image/gif">
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- require jquery and bootstrap scripts -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="styles/styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+
+  <!-- adding style here -->
+  <style type="text/css">
+    header {
+      background-color: gold;
+      font-size: 20px;
+      padding: 15px;
+    }
+
+    #body {
+      margin-left: 3%;
+      margin-right: 3%;
+    }
+
+    .form-control {
+      margin: 8px;
+    }
+
+    #right_header {
+      width: 20%;
+      font-size: 15px;
+      margin-right: 0px;
+    }
+
+    #left_header {
+      margin-left: 0;
+      width: 40%;
+      display: inline-block;
+    }
+
+    #id {
+      width: 49%;
+      display: inline-block;
+    }
+
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    td,
+    th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+
+    .input-field {
+      width: 200px;
+      padding: 6px 1px;
+      margin-left: 0px;
+    }
+  </style>
+</head>
+
+<body ng-app="application" ng-controller="appController">
+  <header class="my-header">
+    <div id="left_header">Parsel Delivery Service: Parsel's page</div>
+    <i id="right_header">Secure parsel delivery system on the Hyperledger Fabric.</i>
+  </header>
+
+  <div id="body">
+
+
+    <!--  Get all groups from repository-->
+    <div class="form-group">
+      <label>Query All Groups in Squadrone</label>
+      <p><input id="queryAllGroups" type="submit" value="Query Group" class="btn btn-success" ng-click="queryAllGroups()"></p>
+    </div>
+
+    <table id="all_groups" class="table" align="center">
+      <tr>
+        <th>ID</th>
+        <th>GroupName</th>
+        <th>GroupDescription</th>
+      </tr>
+      <tr ng-repeat="group in all_groups">
+        <td>{{group.Key}}</td>
+        <td>{{group.groupName}}</td>
+        <td>{{group.description}}</td>
+      </tr>
+    </table>
+
+    <!--  Add new group into repository-->
+    <div class="form-group">
+      <label>Add new group into squadrone</label><br>
+      <h5 style="color:red;margin-bottom:2%" id="error_add_group">Error: Please enter a valid group data.</h5>
+      <h5 style="color:green;margin-bottom:2%" id="success_add_group">The new croup added successfully.</h5>
+      Enter a group name: <input id="groupName" class="form-control input-field" type="text" placeholder="Ex: "
+        ng-model="newGroup.groupName">
+      Enter a description: <input id="groupDesc" class="form-control input-field" type="text" placeholder="Ex: Description"
+        ng-model="newGroup.description">
+      <input id="addGroup" type="submit" value="Add Group" class="btn btn-warning" ng-click="addGroup()">
+    </div>
+
+    <!--  Query all user in organizatione-->
+    <div class="form-group">
+      <label>All Fighters in Squadrone</label>
+      <p><input id="queryAllUsers" type="submit" value="Query fighters" class="btn btn-success" ng-click="queryAllUsers()"></p>
+    </div>
+
+    <table id="all_users" class="table" align="center">
+      <tr>
+        <th>ID</th>
+        <th>Fighter Id</th>
+        <th>Fighter Name</th>
+        <th>Group</th>
+        <th>Description</th>
+        <th>Register TS</th>
+        <th>Test Record</th>
+      </tr>
+      <tr ng-repeat="user in all_users">
+        <td>{{user.Key}}</td>
+        <td>{{user.userId}}</td>
+        <td>{{user.userName}}</td>
+        <td>{{user.groupName}}</td>
+        <td>{{user.description}}</td>
+        <td>{{user.registerTS}}</td>
+        <td> Test Record </td>
+      </tr>
+    </table>
+
+    <!--  Add the user into repository-->
+    <div class="form-group">
+      <label>Add fighter into repository</label><br>
+      <h5 style="color:red;margin-bottom:2%" id="error_add_user">Error: Please enter a valid fighter data</h5>
+      <h5 style="color:green;margin-bottom:2%" id="success_add_user">Congratulation: The new fighter has been added
+        to repository!</h5>
+
+      Enter a fighter Id ( or scan the QR/token ): <input id="createId" class="form-control input-field" type="text"
+        placeholder="Ex: A5V7A01" ng-model="user.userId">
+      Enter a fighter name: <input id="userName" class="form-control input-field" name="assetSelect2" type="text"
+        placeholder="Ex: Smith" ng-model="user.userName">
+      Enter a group name: <input id="groupName" class="form-control input-field" name="assetSelect3" type="text"
+        placeholder="Ex: AB01" ng-model="user.groupName">
+      Enter a description: <input id="groupDesc" class="form-control input-field" type="text" placeholder="Ex: Description"
+        ng-model="user.description">
+      <input id="addUserId" type="submit" value="Add Fighter" class="btn btn-warning" ng-click="addUser()">
+    </div>
+    
+    <!--  Create one item worksheet for whole group -->
+    <div class="form-group">
+       <label>Generate empty group's item list and put into Ledger</label>
+        <br>
+        <h5 style="color:green;margin-bottom:2%" id="success_generated">Success! Tx ID: {{generated_set_for_group}}</h5>
+        <h5 style="color:red;margin-bottom:2%" id="error_generated">Error: Please enter a valid data</h5>
+        <!--Enter a new key(initial number for group): <input class="form-control input-field" placeholder="Ex: 021"
+          ng-model="generator.key"> -->
+        Enter a group name (from available list above): <input class="form-control input-field" placeholder="Ex: AB17"
+          ng-model="generator.groupName">
+        Enter item name: <input class="form-control input-field" name="assetSelect" placeholder="Ex: Belt" ng-model="generator.itemName">
+        Enter deliveryman name: <input class="form-control input-field" name="assetSelect" placeholder="Ex: Smith" ng-model="generator.deliveryMan">
+        <!-- TBD: The delivery deadline: <input class="form-control input-field" name="assetSelect" placeholder="Ex: 2014090811" ng-model="generator.deadlineTS"> -->
+        <input id="generateSetForGroupId" type="submit" value="Generate" class="btn btn-warning" ng-click="generateSetForGroup()">
+     </div>
+
+
+     <div class="dropdown">
+      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Switch to Page
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="index.html"> Main</a> <br/>
+        <a class="dropdown-item" href="service.html"> Service</a> <br/>
+        <a class="dropdown-item" href="clients.html"> Clients</a> <br/>
+        <a class="dropdown-item" href="accounts.html"> Accounts</a> <br/>
+      </div>
+    </div>
+    
+    <br/>
+
+</body>
+
+<!-- requiring the angular page -->
+<script type="text/javascript" src="app1.js"> </script>
+
+</html>
