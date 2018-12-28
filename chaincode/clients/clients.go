@@ -102,10 +102,10 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 */
 func (s *SmartContract) initClientLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	clients := []Client{
-		Client{Name: "Alex", BranchId: "001", Address: "Address 1, City, ZIP", Phone: "67-50", Rate: "1"},
-		Client{Name: "Ben" , BranchId: "002", Address: "Address 1, City, ZIP", Phone: "89-99", Rate: "2"},
-		Client{Name: "John", BranchId: "003", Address: "Address 1, City, ZIP", Phone: "44-45", Rate: "3"},
-		Client{Name: "Nick", BranchId: "004", Address: "Address 1, City, ZIP", Phone: "01-22", Rate: "4"},
+		Client{Name: "Alex", BranchId: "001", Address: "Address 1, City, ZIP", Phone: "67-50", Rate: -1},
+		Client{Name: "Ben" , BranchId: "002", Address: "Address 1, City, ZIP", Phone: "89-99", Rate: 2},
+		Client{Name: "John", BranchId: "003", Address: "Address 1, City, ZIP", Phone: "44-45", Rate: 3},
+		Client{Name: "Nick", BranchId: "004", Address: "Address 1, City, ZIP", Phone: "01-22", Rate: 4},
 	}
 
 	i := 0
@@ -199,20 +199,20 @@ func (s *SmartContract) queryClient(APIstub shim.ChaincodeStubInterface, args []
 
 func (s *SmartContract) addClient(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 4 {
-		return shim.Error("Incorrect number of arguments. Expecting 4")
-	}
+	// if len(args) != 4 {
+	// 	return shim.Error("Incorrect number of arguments. Expecting 4")
+	// }
 
-	var client = Parsel{Sender: args[0], SenderBranch: args[1], SenderTS: time.Now().Format(time.RFC3339), Receiver: args[2], ReceiverBranch: args[3], ReceiverTS: ""}
+	// var client = Parsel{Sender: args[0], SenderBranch: args[1], SenderTS: time.Now().Format(time.RFC3339), Receiver: args[2], ReceiverBranch: args[3], ReceiverTS: ""}
 
-	clientAsBytes, _ := json.Marshal(client)
-	err := APIstub.PutState(randomId(), clientAsBytes)
+	// clientAsBytes, _ := json.Marshal(client)
+	// err := APIstub.PutState(randomId(), clientAsBytes)
 
-	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to record new client: %s", args[0]))
-	}
+	// if err != nil {
+	// 	return shim.Error(fmt.Sprintf("Failed to record new client: %s", args[0]))
+	// }
 
-	fmt.Printf("- addClient:\n%s\n", clientlAsBytes)
+	// fmt.Printf("- addClient:\n%s\n", clientlAsBytes)
 
 	return shim.Success(nil)
 }
@@ -227,62 +227,64 @@ func (s *SmartContract) addClient(APIstub shim.ChaincodeStubInterface, args []st
 */
 func (s *SmartContract) updateClient(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	startKey := "0"
-	endKey := "9999"
+	// startKey := "0"
+	// endKey := "9999"
 
-	resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	defer resultsIterator.Close()
+	// resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
+	// if err != nil {
+	// 	return shim.Error(err.Error())
+	// }
+	// defer resultsIterator.Close()
 
-	// buffer is a JSON array containing QueryResults
-	var buffer bytes.Buffer
+	// // buffer is a JSON array containing QueryResults
+	// var buffer bytes.Buffer
 
-	buffer.WriteString("[")
+	// buffer.WriteString("[")
 
-	bArrayMemberAlreadyWritten := false
+	// bArrayMemberAlreadyWritten := false
 
-	for resultsIterator.HasNext() {
-		queryResponse, err := resultsIterator.Next()
-		if err != nil {
-			return shim.Error(err.Error())
-		}
+	// for resultsIterator.HasNext() {
+	// 	queryResponse, err := resultsIterator.Next()
+	// 	if err != nil {
+	// 		return shim.Error(err.Error())
+	// 	}
 
-		// Create an object
-		parsel := Parsel{}
-		// Unmarshal record to parsel
-		json.Unmarshal(queryResponse.Value, &parsel)
+	// 	// Create an object
+	// 	parsel := Parsel{}
+	// 	// Unmarshal record to parsel
+	// 	json.Unmarshal(queryResponse.Value, &parsel)
 
-		// Add only filtered ny sender records
-		if parsel.Sender == args[0] {
+	// 	// Add only filtered ny sender records
+	// 	if parsel.Sender == args[0] {
 
-			// Add comma before array members,suppress it for the first array member
-			if bArrayMemberAlreadyWritten == true {
-				buffer.WriteString(",")
-			}
+	// 		// Add comma before array members,suppress it for the first array member
+	// 		if bArrayMemberAlreadyWritten == true {
+	// 			buffer.WriteString(",")
+	// 		}
 
-			buffer.WriteString("{\"Key\":")
-			buffer.WriteString("\"")
-			buffer.WriteString(queryResponse.Key)
-			buffer.WriteString("\"")
+	// 		buffer.WriteString("{\"Key\":")
+	// 		buffer.WriteString("\"")
+	// 		buffer.WriteString(queryResponse.Key)
+	// 		buffer.WriteString("\"")
 
-			buffer.WriteString(", \"Record\":")
-			// Record is a JSON object, so we write as-is
-			buffer.WriteString(string(queryResponse.Value))
-			buffer.WriteString("}")
-			bArrayMemberAlreadyWritten = true
-		}
-	}
-	buffer.WriteString("]")
+	// 		buffer.WriteString(", \"Record\":")
+	// 		// Record is a JSON object, so we write as-is
+	// 		buffer.WriteString(string(queryResponse.Value))
+	// 		buffer.WriteString("}")
+	// 		bArrayMemberAlreadyWritten = true
+	// 	}
+	// }
+	// buffer.WriteString("]")
 
-	if bArrayMemberAlreadyWritten == false {
-		return shim.Error(err.Error())
-	}
+	// if bArrayMemberAlreadyWritten == false {
+	// 	return shim.Error(err.Error())
+	// }
 
-	fmt.Printf("- updateClient:\n%s\n", buffer.String())
+	// fmt.Printf("- updateClient:\n%s\n", buffer.String())
 
-	return shim.Success(buffer.Bytes())
+	//return shim.Success(buffer.Bytes())
+
+	return shim.Success(nil)
 }
 
 /*
@@ -290,41 +292,41 @@ func (s *SmartContract) updateClient(APIstub shim.ChaincodeStubInterface, args [
  The data in the world state can be updated with who has possession.
  This function takes in 2 arguments, parsel id and timestamp of delivery.
 */
-func (s *SmartContract) deleteClient(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) removeClient(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
-	}
+	// if len(args) != 1 {
+	// 	return shim.Error("Incorrect number of arguments. Expecting 1")
+	// }
 
-	parselAsBytes, _ := APIstub.GetState(args[0])
-	if parselAsBytes == nil {
+	// parselAsBytes, _ := APIstub.GetState(args[0])
+	// if parselAsBytes == nil {
 
-        fmt.Printf("- deliveryParsel with id: %s Parsel not found \n", args[0])
+    //     fmt.Printf("- deliveryParsel with id: %s Parsel not found \n", args[0])
 
-		return shim.Error("Parsel not found")
-	}
-	parsel := Parsel{}
+	// 	return shim.Error("Parsel not found")
+	// }
+	// parsel := Parsel{}
 
-	json.Unmarshal(parselAsBytes, &parsel)
-	// Normally check that the specified argument is a valid holder of parsel
-	// we are skipping this check for this example
+	// json.Unmarshal(parselAsBytes, &parsel)
+	// // Normally check that the specified argument is a valid holder of parsel
+	// // we are skipping this check for this example
 	
-	if parsel.ReceiverTS != "" {
+	// if parsel.ReceiverTS != "" {
 
-		fmt.Printf("- deliveryParsel with id: %s Already delivered \n", args[0])
+	// 	fmt.Printf("- deliveryParsel with id: %s Already delivered \n", args[0])
 
-		return shim.Error("Already delivered")
-	}
+	// 	return shim.Error("Already delivered")
+	// }
 
-	parsel.ReceiverTS = time.Now().Format(time.RFC3339)
+	// parsel.ReceiverTS = time.Now().Format(time.RFC3339)
 
-	parselAsBytes, _ = json.Marshal(parsel)
-	err := APIstub.PutState(args[0], parselAsBytes)
-	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to change status of parsel: %s", args[0]))
-	}
+	// parselAsBytes, _ = json.Marshal(parsel)
+	// err := APIstub.PutState(args[0], parselAsBytes)
+	// if err != nil {
+	// 	return shim.Error(fmt.Sprintf("Failed to change status of parsel: %s", args[0]))
+	// }
 
-	fmt.Printf("- deleteClient:\n%s\n", parselAsBytes)
+	// fmt.Printf("- removeClient:\n%s\n", parselAsBytes)
 
 	return shim.Success(nil)
 }

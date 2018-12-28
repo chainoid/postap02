@@ -77,6 +77,50 @@
 
     <div id="body">
 
+
+
+ <!--  Get all parsels from parsel channel-->
+ <div class="form-group">
+    <label>Query all Clients in System</label>
+    <p><input id="queryAllClients" type="submit" value="Query" class="btn btn-success" ng-click="queryAllClients()"></p>
+  </div>
+
+  <div class="alert alert-danger" role="alert" id="error_query_all">
+     Error of query request
+  </div>
+
+  <table id="all_clients" class="table" align="center">
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Phone</th>
+      <th>Branch</th>
+      <th>Rate</th>
+       <th></th>
+    <tr ng-repeat="client in all_clients">
+      <td>{{client.Key}}</td>
+      <td>{{client.name}}</td>
+      <td>{{client.address}}</td>
+      <td>{{client.phone}}</td>
+      <td>{{client.branchId}}</td>
+      <td>{{client.rate}}</td>
+      <td>  <!-- Action button -->
+        <div class="dropdown">
+        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Action
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="index.html"> Accept</a> <br/>
+          <a class="dropdown-item" href="service.html"> Tranfer</a> <br/>
+          <a class="dropdown-item" href="clients.html"> Return</a> <br/>
+          <a class="dropdown-item" href="accounts.html"> Delivery</a> <br/>
+          <a class="dropdown-item" href="accounts.html"> History</a> <br/>
+        </div>
+      </div></td>
+    </tr>
+  </table>
+
       <div class="form-group">
         <label>Query Fighter's Record</label><br>
         <h5 style="color:red;margin-bottom:2%" id="error_user_record">Error: Record(s) for selected user not found</h5>
@@ -104,30 +148,7 @@
           </tr>
         </table>
 
-      <table id="user_record2" class="table" align="center">
-
-        <tr >
-          <th>Item Id</th>
-          <th>Figther</th> 
-          <th>Item</th>
-          <th>Deliveryman</th>
-          <th>Assigned TS</th>
-          <th>Size</th>
-          <th>Delivered</th>
-          <th>Description</th> 
-        </tr>
-
-        <tr ng-repeat="record in user_record.recordList">
-          <td>{{record.itemId}}</td>
-          <td>{{user_record.userName}}</td> 
-          <td>{{record.itemName}}</td>
-          <td>{{record.deliveryMan}}</td>
-          <td>{{record.assignedTS}}</td>
-          <td>{{record.rate}}</td>
-          <td>{{record.deliveryTS}}</td>
-          <td>{{record.deliveryDesc}}</td> 
-        </tr>
-      </table>
+      
 
       <div class="dropdown">
         <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -146,5 +167,5 @@
     </div>
   </body>
     <!-- requiring the angular page -->
-    <script type="text/javascript" src="app3.js"> </script>
+    <script type="text/javascript" src="app2.js"> </script>
 </html>

@@ -8,56 +8,57 @@ var app = angular.module('application', []);
 app.controller('appController', function ($scope, appFactory) {
 
 	// Intendant page
-	$("#all_groups").hide();
-	$("#all_users").hide();
+	$("#error_query_all").hide();
+	$("#all_clients").hide();
 
-	$("#error_add_group").hide();
-	$("#success_add_group").hide();
+	//$("#error_add_group").hide();
+	//$("#success_add_group").hide();
 
-	$("#error_add_user").hide();
-	$("#success_add_user").hide();
+	//$("#error_add_user").hide();
+	//$("#success_add_user").hide();
 
-	$("#success_generated").hide();
-	$("#error_generated").hide();
-
-	// Deliveryman page
-	$("#error_item_source").hide();
-
-	$("#error_query").hide();
-	$("#error_sender").hide();
-	$("#error_query_id").hide();
-	$("#error_query_student").hide();
-	$("#error_prepare_delivery").hide();
-	$("#error_pass_exam").hide();
-	$("#error_student_record").hide();
-	$("#item_list").hide();
-	
-	
-	$("#error_old_exam").hide();
-	$("#success_delivery").hide();
-
-	// Fighter page	
-	$("#error_user_record").hide();
-	$("#user_record").hide();
-	$("#user_record2").hide();
+	//$("#success_generated").hide();
+	//$("#error_generated").hide();
 
 	
+	//$("#error_item_source").hide();
+
+	//$("#error_query").hide();
+	//$("#error_sender").hide();
+	//$("#error_query_id").hide();
+	//$("#error_query_student").hide();
+	//$("#error_prepare_delivery").hide();
+	//$("#error_pass_exam").hide();
+	//$("#error_student_record").hide();
+	//$("#item_list").hide();
+			
 
 	$("#take_form").hide();
 
-	$scope.queryAllGroups = function () {
+	$scope.queryAllClients = function () {
 
-		appFactory.queryAllGroups(function (data) {
+		appFactory.queryAllClients(function (data) {
+
+
+			if ($scope.query_all_clientss == "Error of query request"){
+				console.log()
+				$("#error_query_all").show();
+				$("#all_clients").hide();
+				
+			} else{
+				$("#all_clients").show();
+				$("#error_query_all").hide();
+
 			var array = [];
 			for (var i = 0; i < data.length; i++) {
 				data[i].Record.Key = data[i].Key;
 				array.push(data[i].Record);
 			}
 			array.sort(function(a, b) {
-			    return a.groupName.localeCompare(b.groupName);
+			    return a.name.localeCompare(b.name);
 			});
-			$scope.all_groups = array;
-			$("#all_groups").show();
+			$scope.all_clients = array;
+		  }
 		});
 	}
 
@@ -93,21 +94,21 @@ app.controller('appController', function ($scope, appFactory) {
 		});
 	}
 
-	$scope.queryAllUsers = function () {
+	// $scope.queryAllUsers = function () {
 
-		appFactory.queryAllUsers(function (data) {
-			var array = [];
-			for (var i = 0; i < data.length; i++) {
-				data[i].Record.Key = data[i].Key;
-				array.push(data[i].Record);
-			}
-			array.sort(function (a, b) {
-				return a.groupName.localeCompare(b.groupName);
-			});
-			$scope.all_users = array;
-			$("#all_users").show();
-		});
-	}
+	// 	appFactory.queryAllUsers(function (data) {
+	// 		var array = [];
+	// 		for (var i = 0; i < data.length; i++) {
+	// 			data[i].Record.Key = data[i].Key;
+	// 			array.push(data[i].Record);
+	// 		}
+	// 		array.sort(function (a, b) {
+	// 			return a.name.localeCompare(b.name);
+	// 		});
+	// 		$scope.all_users = array;
+	// 		$("#all_users").show();
+	// 	});
+	// }
 
 	$scope.generateSetForGroup = function () {
 
@@ -216,9 +217,9 @@ app.factory('appFactory', function ($http) {
 
 	var factory = {};
 
-	factory.queryAllGroups = function (callback) {
+	factory.queryAllClients = function (callback) {
 
-		$http.get('/get_all_groups/').success(function (output) {
+		$http.get('/get_all_clients/').success(function (output) {
 			callback(output)
 		});
 	}
@@ -243,12 +244,11 @@ app.factory('appFactory', function ($http) {
 		});
 	}
 
-	factory.queryAllUsers = function (callback) {
-
-		$http.get('/query_all_users/').success(function (output) {
-			callback(output)
-		});
-	}
+	// factory.queryAllUsers = function (callback) {
+	// 	$http.get('/query_all_users/').success(function (output) {
+	// 		callback(output)
+	// 	});
+	// }
 	
 	factory.generateSetForGroup = function (generator, callback) {
 

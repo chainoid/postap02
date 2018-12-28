@@ -22,4 +22,7 @@ module.exports = function(app){
   app.get('/get_sender/:name', function(req, res){
     parsel.get_sender(req, res);
   })
+  app.get('/get_all_clients', function(req, res){
+    parsel.get_all_clients(req, res);
+  })
 }
