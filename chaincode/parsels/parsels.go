@@ -304,9 +304,9 @@ func (s *SmartContract) switchCourier(APIstub shim.ChaincodeStubInterface, args 
 	parsel := Parsel{}
 
 	json.Unmarshal(parselAsBytes, &parsel)
+
 	// Normally check that the specified argument is a valid holder of parsel
 	// we are skipping this check for this example
-	
 	parsel.CourierId = args[1]
 
 	parsel.CourierTS = time.Now().Format(time.RFC3339)
@@ -345,9 +345,9 @@ func (s *SmartContract) deliveryParsel(APIstub shim.ChaincodeStubInterface, args
 	parsel := Parsel{}
 
 	json.Unmarshal(parselAsBytes, &parsel)
+
 	// Normally check that the specified argument is a valid holder of parsel
 	// we are skipping this check for this example
-	
 	if parsel.ReceiverTS != "" {
 
 		fmt.Printf("- deliveryParsel with id: %s Already delivered \n", args[0])

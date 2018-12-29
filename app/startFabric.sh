@@ -6,7 +6,7 @@
 #
 # Exit on first error
 
-set -ev
+set -e
 
 # don't rewrite paths for Windows Git Bash users
 export MSYS_NO_PATHCONV=1
@@ -40,7 +40,6 @@ sleep 10
 docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp" cli peer chaincode invoke -o orderer.example.com:7050 -C parsel-channel -n parsels -c '{"function":"initLedger","Args":[""]}'
 
 docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp" cli peer chaincode invoke -o orderer.example.com:7050 -C client-channel -n clients -c '{"function":"initClientLedger","Args":[""]}'
-
 
 
 printf "\nTotal execution time : $(($(date +%s) - starttime)) secs ...\n\n"

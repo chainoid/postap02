@@ -163,8 +163,8 @@ func (s *SmartContract) queryAllClients(APIstub shim.ChaincodeStubInterface) sc.
 		buffer.WriteString("}")
 		bArrayMemberAlreadyWritten = true
 	}
-	buffer.WriteString("]")
 
+	buffer.WriteString("]")
 	fmt.Printf("- queryAllClients:\n%s\n", buffer.String())
 
 	return shim.Success(buffer.Bytes())
@@ -216,7 +216,6 @@ func (s *SmartContract) addClient(APIstub shim.ChaincodeStubInterface, args []st
 
 	return shim.Success(nil)
 }
-
 
 
 /*

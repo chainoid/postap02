@@ -11,41 +11,21 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#error_serder_receiver_id").hide();
 	$("#success_create_order").hide();
 
+	// Accept parsel
+	$("#error_accept_parsel").hide();
+	$("#success_accepted").hide();
 
 
-	// OLD Intendant page
-	$("#all_groups").hide();
-	$("#all_users").hide();
+    // Switch courier
+	$("#error_switch_courier").hide();
+	$("#success_switch_courier").hide();
 
-	$("#error_add_group").hide();
-	$("#success_add_group").hide();
 
-	$("#error_add_user").hide();
-	$("#success_add_user").hide();
+    // Delivery parsel
+	$("#error_delivery_parsel").hide();
+	$("#error_already_delivered").hide();
+	$("#success_delivery").hide();
 
-	$("#success_generated").hide();
-	$("#error_generated").hide();
-
-	// Deliveryman page
-	$("#error_item_source").hide();
-
-	$("#error_query").hide();
-	$("#error_sender").hide();
-	$("#error_query_id").hide();
-	$("#error_query_student").hide();
-	$("#error_prepare_delivery").hide();
-	$("#error_pass_exam").hide();
-	$("#error_student_record").hide();
-	$("#item_list").hide();
-	
-	// Fighter page	
-	$("#error_user_record").hide();
-	$("#user_record").hide();
-	$("#user_record2").hide();
-
-	
-
-	$("#take_form").hide();
 
 	$scope.createParselOrder = function () {
 
@@ -63,6 +43,26 @@ app.controller('appController', function ($scope, appFactory) {
 		});
 	}
 
+
+	$scope.acceptParsel = function () {
+
+		appFactory.acceptParsel($scope.accept, function (data) {
+
+			if (data == "Could not locate undelivered item") {
+				$("#error_accept_parsel").show();
+				$("#success_accepted").hide();
+			} 
+			
+			else {	
+				$("#error_accept_parsel").hide();
+				$("#success_accepted").show();
+			}
+			
+			$scope.accepted_parsel_result = data;
+		});
+	}
+
+
 	$scope.switchCourier = function () {
 
 		appFactory.switchCourier($scope.switch, function (data) {
@@ -76,76 +76,6 @@ app.controller('appController', function ($scope, appFactory) {
 			}
 
 			$scope.switch_courier_result = data;
-		});
-	}
-
-    $scope.addUser = function () {
-
-		appFactory.addUser($scope.user, function (data) {
-
-			if (data == "Could not locate unpassed test") {
-				$("#error_add_user").show();
-				$("#success_add_user").hide();
-			} else {
-				$("#error_add_user").hide();
-				$("#success_add_user").show();
-			}
-
-			$scope.exam_result = data;
-		});
-	}
-
-	$scope.queryAllUsers = function () {
-
-		appFactory.queryAllUsers(function (data) {
-			var array = [];
-			for (var i = 0; i < data.length; i++) {
-				data[i].Record.Key = data[i].Key;
-				array.push(data[i].Record);
-			}
-			array.sort(function (a, b) {
-				return a.groupName.localeCompare(b.groupName);
-			});
-			$scope.all_users = array;
-			$("#all_users").show();
-		});
-	}
-
-	$scope.generateSetForGroup = function () {
-
-		appFactory.generateSetForGroup($scope.generator, function (data) {
-			$scope.generated_set_for_group = data;
-
-			if ($scope.generated_set_for_group == "error_generated") {
-				console.log()
-				$("#error_generated").show();
-			} else {
-				$("#error_generated").hide();
-				$("#success_generated").show();
-			}
-
-		});
-	}
-
-	$scope.getUserRecord = function () {
-		
-		var id = $scope.id;
-
-		appFactory.getUserRecord(id, function(data){
-
-			$scope.user_record = data;
-
-			if ($scope.user_record == "User record not found"){
-				console.log()
-				$("#error_user_record").show();
-				$("#user_record").hide();
-				$("#user_record2").hide();
-				
-			} else{
-				$("#error_user_record").hide();
-				$("#user_record").show();
-				$("#user_record2").show();
-			}
 		});
 	}
 
@@ -192,21 +122,27 @@ app.controller('appController', function ($scope, appFactory) {
 		  $scope.delicase = item;
 	}
 
-	$scope.deliveryItem = function () {
+	$scope.deliveryParsel = function () {
+	
 
-		var delicase = $scope.delicase;
+		appFactory.deliveryParsel($scope.delivery, function (data) {
 
-		appFactory.deliveryItem(delicase, function (data) {
-
-			if (data == "Could not locate undelivered item") {
-				$("#error_item_source").show();
-				$("#success_delivery").hide();
-			} else {	
-				$("#error_item_source").hide();
-				$("#success_delivery").show();
-			}
+			$scope.delivery_parsel = data;
 			
-			$scope.exam_result = data;
+			$("#error_parsel_id").hide();
+			$("#error_delivered").hide();
+			$("#success_delivery").show();
+
+			if ($scope.delivery_parsel == "Error: Parsel not found") {
+				$("#error_parsel_id").show();
+				$("#success_delivery").hide();
+				$("#error_delivered").hide();
+
+			} else if ($scope.delivery_parsel == "Error: Already delivered") {
+				$("#error_parsel_id").hide();
+				$("#success_delivery").hide();
+		    	$("#error_delivered").show();
+        	} 
 		});
 	}
 
@@ -217,28 +153,22 @@ app.controller('appController', function ($scope, appFactory) {
 app.factory('appFactory', function ($http) {
 
 	var factory = {};
-
-	factory.queryAllGroups = function (callback) {
-
-		$http.get('/get_all_groups/').success(function (output) {
-			callback(output)
-		});
-	}
 	
-	factory.deliveryItem = function (input, callback) {
-
-		var params = input.userId + "-" + input.itemName + "-" + input.rate;
-
-		$http.get('/delivery_item/' + params).success(function (output) {
-			callback(output)
-		});
-	}
-	
+		
 	factory.createParselOrder = function (data, callback) {
 
 		var order = data.senderId + "-" + data.receiverId + "-" + "-" + "-";
 
 		$http.get('/create_parsel_order/' + order).success(function (output) {
+			callback(output)
+		});
+	}
+
+    factory.acceptParsel = function (input, callback) {
+
+		var params = input.parselId + "-" + input.branchId;
+
+		$http.get('/accept_parsel/' + params).success(function (output) {
 			callback(output)
 		});
 	}
@@ -252,12 +182,6 @@ app.factory('appFactory', function ($http) {
 		});
 	}
 
-	factory.getUserRecord = function (id, callback) {
-		$http.get('/get_user_record/' + id).success(function (output) {
-			callback(output)
-		});
-	}
-
 	factory.prepareForDelivery = function (exam, callback) {
 
 		var params = exam.group + "-" + exam.course;
@@ -267,11 +191,11 @@ app.factory('appFactory', function ($http) {
 		});
 	}
 
-	factory.deliveryItem = function (input, callback) {
+	factory.deliveryParsel = function (delivery, callback) {
 
-		var params = input.userId + "-" + input.itemName + "-" + input.rate;
+		var params = delivery.parselId;
 
-		$http.get('/delivery_item/' + params).success(function (output) {
+		$http.get('/delivery_parsel/' + params).success(function (output) {
 			callback(output)
 		});
 	}

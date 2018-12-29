@@ -856,13 +856,13 @@ return{
 	delivery_parsel: function(req, res){
 		console.log("put a timestamp, changing owner of parsel on delivery: ");
 
-		var array = req.params.parsel.split("-");
-		var key = array[0]
+		var array = req.params.delivery.split("-");
+		var parselId = array[0]
 		
 		var fabric_client = new Fabric_Client();
 
 		// setup the fabric network
-		var channel = fabric_client.newChannel('posta-channel');
+		var channel = fabric_client.newChannel('parsel-channel');
 		var peer = fabric_client.newPeer('grpc://localhost:7051');
 		channel.addPeer(peer);
 		var order = fabric_client.newOrderer('grpc://localhost:7050')
@@ -903,10 +903,10 @@ return{
 		    // send proposal to endorser
 		    var request = {
 		        //targets : --- letting this default to the peers assigned to the channel
-		        chaincodeId: 'postap',
+		        chaincodeId: 'parsels',
 		        fcn: 'deliveryParsel',
-		        args: [key],
-		        chainId: 'posta-channel',
+		        args: [parselId],
+		        chainId: 'parsel-channel',
 		        txId: tx_id
 		    };
 
