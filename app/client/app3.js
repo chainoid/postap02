@@ -22,8 +22,8 @@ app.controller('appController', function ($scope, appFactory) {
 
 
     // Delivery parsel
-	$("#error_delivery_parsel").hide();
-	$("#error_already_delivered").hide();
+	$("#error_parsel_id").hide();
+	$("#error_delivered").hide();
 	$("#success_delivery").hide();
 
 
@@ -135,13 +135,15 @@ app.controller('appController', function ($scope, appFactory) {
 
 			if ($scope.delivery_parsel == "Error: Parsel not found") {
 				$("#error_parsel_id").show();
-				$("#success_delivery").hide();
 				$("#error_delivered").hide();
+				$("#success_delivery").hide();
+			
 
 			} else if ($scope.delivery_parsel == "Error: Already delivered") {
 				$("#error_parsel_id").hide();
+				$("#error_delivered").show();
 				$("#success_delivery").hide();
-		    	$("#error_delivered").show();
+		    	
         	} 
 		});
 	}

@@ -127,14 +127,19 @@
 
       <div class="form-group">
           <label>Delivery Parsel to Receiver</label><br>
-
-          <div class="alert alert-danger" role="alert" id="error_delivery_parsel">
-            Error: Please enter a valid parsel Id
-          </div>
-
+          
           <div class="alert alert-success" role="alert" id="success_delivery">
-            Success! Tx ID: {{delivery_result}}
+            Success! Tx ID: {{delivery_parsel}}
           </div>
+
+          <div class="alert alert-danger" role="alert" id="error_parsel_id">
+              Error: Please enter a valid Parsel Id
+            </div>
+          
+          <div class="alert alert-warning" role="alert" id="error_delivered">
+              Error: This Parsel already delivered
+          </div>
+
 
            Parsel Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB4177F6" ng-model="delivery.parselId">
            Branch Id: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: 997" ng-model="delivery.branchId">

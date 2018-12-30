@@ -293,7 +293,8 @@ return{
 
 		        return Promise.all(promises);
 		    } else {
-		        console.error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
+				console.error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
+				res.send(util.format("%s", proposalResponses));
 		        throw new Error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
 		    }
 		}).then((results) => {
@@ -301,9 +302,9 @@ return{
 		    // check the results in the order the promises were added to the promise all list
 		    if (results && results[0] && results[0].status === 'SUCCESS') {
 		        console.log('Successfully sent transaction to the orderer.');
-		        //res.send(tx_id.getTransactionID());
 		    } else {
-		        console.error('Failed to order the transaction. Error code: ' + response.status);
+				console.error('Failed to order the transaction. Error code: ' + response.status);
+				res.send("Parsel not found");
 		    }
 
 		    if(results && results[1] && results[1].event_status === 'VALID') {
