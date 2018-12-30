@@ -12,6 +12,11 @@ app.controller('appController', function ($scope, appFactory) {
 
 	$("#error_query_all").hide();
 
+	$("#error_parsel_history").hide();
+	$("#parsel_history").hide();
+
+
+
 
 	$("#all_users").hide();
 
@@ -24,8 +29,7 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#success_generated").hide();
 	$("#error_generated").hide();
 
-	// Deliveryman page
-	$("#error_item_source").hide();
+	
 
 	$("#error_query").hide();
 	$("#error_sender").hide();
@@ -84,37 +88,40 @@ app.controller('appController', function ($scope, appFactory) {
 		$("#all_parsels").show();
 	}
 
-	$scope.addGroup = function () {
+	$scope.getParselHistory = function(parsel){
+		
+		var parselId = parsel.Key;
 
-		appFactory.addGroup($scope.newGroup, function (data) {
-
-			if (data == "Could not locate unpassed test") {
-				$("#error_add_group").show();
-				$("#success_add_group").hide();
-			} else {
-				$("#error_add_group").hide();
-				$("#success_add_group").show();
+		appFactory.parselHistory(parselId, function(data){
+			
+			if (data  == "No history for parsel"){
+				console.log()
+				$("#error_parsel_history").show();
+				$("#parsel_history").hide();
+			} else{
+				$("#error_parsel_history").hide();
+				$("#parsel_history").show();
+			
+			var array = [];
+			for (var i = 0; i < data.length; i++){
+				
+				data[i].Record.TxId = data[i].TxId;
+				data[i].Record.TxTS = data[i].TxTS;
+				data[i].Record.IsDelete = data[i].IsDelete;
+			
+				array.push(data[i].Record);
 			}
-
-			$scope.exam_result = data;
+			array.sort(function(a, b) {
+			    return a.senderTS.localeCompare(b.senderTS);
+			});
+			$scope.parsel_history = array;
+	      }
 		});
+
+		$("#parsel_history").show();
+		$("#history_parsel_id").show();
 	}
-
-    $scope.addUser = function () {
-
-		appFactory.addUser($scope.user, function (data) {
-
-			if (data == "Could not locate unpassed test") {
-				$("#error_add_user").show();
-				$("#success_add_user").hide();
-			} else {
-				$("#error_add_user").hide();
-				$("#success_add_user").show();
-			}
-
-			$scope.exam_result = data;
-		});
-	}
+    
 
 	$scope.queryAllUsers = function () {
 
@@ -132,74 +139,6 @@ app.controller('appController', function ($scope, appFactory) {
 		});
 	}
 
-	$scope.generateSetForGroup = function () {
-
-		appFactory.generateSetForGroup($scope.generator, function (data) {
-			$scope.generated_set_for_group = data;
-
-			if ($scope.generated_set_for_group == "error_generated") {
-				console.log()
-				$("#error_generated").show();
-			} else {
-				$("#error_generated").hide();
-				$("#success_generated").show();
-			}
-
-		});
-	}
-
-	$scope.getUserRecord = function () {
-		
-		var id = $scope.id;
-
-		appFactory.getUserRecord(id, function(data){
-
-			$scope.user_record = data;
-
-			if ($scope.user_record == "User record not found"){
-				console.log()
-				$("#error_user_record").show();
-				$("#user_record").hide();
-				$("#user_record2").hide();
-				
-			} else{
-				$("#error_user_record").hide();
-				$("#user_record").show();
-				$("#user_record2").show();
-			}
-		});
-	}
-
-	$scope.prepareForDelivery = function () {
-
-		var order = $scope.order;
-
-		appFactory.prepareForDelivery(order, function (data) {
-
-			if (data == "No group/item found") {
-				console.log("No group/item found");
-				$("#error_prepare_delivery").show();
-				$("#item_list").hide();
-			
-			} else {
-				$("#error_prepare_delivery").hide();
-				$("#item_list").show();
-				$("#take_form").hide(); 
-			}
-
-			var array = [];
-			for (var i = 0; i < data.length; i++) {
-				data[i].Record.Key = data[i].Key;
-				array.push(data[i].Record);
-			}
-			array.sort(function (a, b) {
-				return parseFloat(a.Key) - parseFloat(b.Key);
-			});
-			$scope.item_list = array;
-		});
-	}
-
-
 	$scope.beforeDeliveryItem = function (item) {
 		        
           if (item.rate != "") {
@@ -213,24 +152,7 @@ app.controller('appController', function ($scope, appFactory) {
 		  $scope.delicase = item;
 	}
 
-	$scope.deliveryItem = function () {
-
-		var delicase = $scope.delicase;
-
-		appFactory.deliveryItem(delicase, function (data) {
-
-			if (data == "Could not locate undelivered item") {
-				$("#error_item_source").show();
-				$("#success_delivery").hide();
-			} else {	
-				$("#error_item_source").hide();
-				$("#success_delivery").show();
-			}
-			
-			$scope.exam_result = data;
-		});
-	}
-
+	
 });
 
 
@@ -246,62 +168,8 @@ app.factory('appFactory', function ($http) {
 		});
 	}
 
-
-	factory.addGroup = function (data, callback) {
-
-		var newGroup =  data.groupName + "-" + data.description;
-
-		$http.get('/add_group/' + newGroup).success(function (output) {
-			callback(output)
-		});
-	}
-
-
-	factory.addUser = function (data, callback) {
-
-		var user = data.userId + "-" + data.userName + "-" + data.groupName + "-" + data.description;
-
-		$http.get('/add_user/' + user).success(function (output) {
-			callback(output)
-		});
-	}
-
-	factory.queryAllUsers = function (callback) {
-
-		$http.get('/query_all_users/').success(function (output) {
-			callback(output)
-		});
-	}
-	
-	factory.generateSetForGroup = function (generator, callback) {
-
-		var generator = generator.groupName + "-" + generator.itemName + "-" + generator.deliveryMan;
-
-		$http.get('/generate_set_for_group/' + generator).success(function (output) {
-			callback(output)
-		});
-	}
-
-	factory.getUserRecord = function (id, callback) {
-		$http.get('/get_user_record/' + id).success(function (output) {
-			callback(output)
-		});
-	}
-
-	factory.prepareForDelivery = function (exam, callback) {
-
-		var params = exam.group + "-" + exam.course;
-
-		$http.get('/prepare_for_delivery/' + params).success(function (output) {
-			callback(output)
-		});
-	}
-
-	factory.deliveryItem = function (input, callback) {
-
-		var params = input.userId + "-" + input.itemName + "-" + input.rate;
-
-		$http.get('/delivery_item/' + params).success(function (output) {
+	factory.parselHistory = function(parselId, callback){
+    	$http.get('/parsel_history/'+parselId).success(function(output){
 			callback(output)
 		});
 	}

@@ -127,11 +127,52 @@
             <a class="dropdown-item" href="service.html"> Tranfer</a> <br/>
             <a class="dropdown-item" href="clients.html"> Return</a> <br/>
             <a class="dropdown-item" href="accounts.html"> Delivery</a> <br/>
-            <a class="dropdown-item" href="accounts.html"> History</a> <br/>
+            <a class="dropdown-item" href="" ng-click="getParselHistory(parsel)"> History</a> <br/>
           </div>
         </div></td>
       </tr>
     </table>
+
+
+    <div class="form-group"  >
+      <label>Query History of Parsel</label>
+      <!-- Enter a parsel ID: <input id="parselID" class="form-control input-field" type="text" placeholder=" Ex: 2" ng-model="historyId">
+      <input id="historyParsel" type="submit" value="History" class="btn btn-primary" ng-click="historyParsel()"> -->
+    </div>
+
+    <div class="alert alert-danger" role="alert" id="error_parsel_history">
+      Error: Cannot load history for this Parsel ID
+    </div>
+
+    <table id="parsel_history" class="table" align="center">
+      <tr >
+        <th>Tx Timestamp</th>
+        <th>Tx Id</th>
+        <th>Sender</th>
+        <th>Sender branch</th>
+        <th>Sender Timestamp</th>
+        <th>Courier</th>
+        <th>Courier Timestamp</th>
+        <th>Receiver Timestamp</th>
+        <th>Receiver branch</th>
+        <th>Receiver</th> 
+        <th>Deleted</th>
+      </tr>
+      <tr ng-repeat="rec in parsel_history">
+        <td>{{rec.TxTS}}</td>
+        <td>{{rec.TxId}}</td>
+        <td>{{rec.sender}}</td>
+        <td>{{rec.senderBranch}}</td> 
+        <td>{{rec.senderTS}}</td>
+        <td>{{rec.courierId}}</td> 
+        <td>{{rec.courierTS}}</td>
+        <td>{{rec.receiverTS}}</td>
+        <td>{{rec.receiverBranch}}</td>
+        <td>{{rec.receiver}}</td>
+        <td>{{rec.IsDelete}}</td>  
+      </tr>
+    </table>
+
 
     <div class="dropdown">
       <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

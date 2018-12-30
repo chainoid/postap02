@@ -779,13 +779,13 @@ return{
 		});
 	},
 
-    history_parsel: function(req, res){
+    parsel_history: function(req, res){
 
 		var fabric_client = new Fabric_Client();
-		var historyId = req.params.historyId
+		var parselId = req.params.parselId
 
 		// setup the fabric network
-		var channel = fabric_client.newChannel('posta-channel');
+		var channel = fabric_client.newChannel('parsel-channel');
 		var peer = fabric_client.newPeer('grpc://localhost:7051');
 		channel.addPeer(peer);
 
@@ -819,10 +819,10 @@ return{
 
 		    // getParsel - requires 1 argument, ex: args: ['4'],
 		    const request = {
-		        chaincodeId: 'postap',
+		        chaincodeId: 'parsels',
 		        txId: tx_id,
-		        fcn: 'historyRecord',
-		        args: [historyId]
+		        fcn: 'parselHistory',
+		        args: [parselId]
 		    };
 
 		    // send the query proposal to the peer

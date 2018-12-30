@@ -89,8 +89,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.deliveryParsel(APIstub, args)
 	} else if function == "querySender" {
 		return s.querySender(APIstub, args)
-	} else if function == "historyParsel" {
-		return s.historyParsel(APIstub, args)
+	} else if function == "parselHistory" {
+		return s.parselHistory(APIstub, args)
 	} else if function == "switchCourier" {
 		return s.switchCourier(APIstub, args)
 	}
@@ -371,7 +371,7 @@ func (s *SmartContract) deliveryParsel(APIstub shim.ChaincodeStubInterface, args
 /*
  * The getHistoryForKey method *
  */
-func (s *SmartContract) historyParsel(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) parselHistory(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	resultsIterator, err := APIstub.GetHistoryForKey(args[0])
 
@@ -419,7 +419,7 @@ func (s *SmartContract) historyParsel(APIstub shim.ChaincodeStubInterface, args 
 	}
 	buffer.WriteString("]")
 
-	fmt.Printf("- historyRecord:\n%s\n", buffer.String())
+	fmt.Printf("- parselHistory:\n%s\n", buffer.String())
 
 	return shim.Success(buffer.Bytes())
 }
