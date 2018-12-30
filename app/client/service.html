@@ -115,6 +115,10 @@
           <div class="alert alert-danger" role="alert" id="error_switch_courier">
             Error: Please enter a valid parsel Id
           </div>
+
+          <div class="alert alert-success" role="alert" id="success_switch_courier">
+              Success! Tx ID: {{switch_courier_result}}
+          </div>
          
            Parsel Id:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: 0AB4177F6" ng-model="switch.parselId">
            Next Courier Id<input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: Courier007 or Id" ng-model="switch.courierId">
@@ -138,7 +142,7 @@
       </div>
             
 
-      <div class="dropdown">
+      <div class="dropdown dropup">
         <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Switch to Page
         </button>

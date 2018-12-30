@@ -12,6 +12,7 @@ app.controller('appController', function ($scope, appFactory) {
 
 	$("#error_query_all").hide();
 
+	$("#parsel_history_header").hide();
 	$("#error_parsel_history").hide();
 	$("#parsel_history").hide();
 
@@ -39,19 +40,7 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#error_pass_exam").hide();
 	$("#error_student_record").hide();
 	$("#item_list").hide();
-	
-	
-	$("#error_old_exam").hide();
-	$("#success_delivery").hide();
-
-	// Fighter page	
-	$("#error_user_record").hide();
-	$("#user_record").hide();
-	$("#user_record2").hide();
-
-	
-
-	$("#take_form").hide();
+		
 
 	$scope.queryAllParsels = function(){
 
@@ -115,9 +104,11 @@ app.controller('appController', function ($scope, appFactory) {
 			    return a.senderTS.localeCompare(b.senderTS);
 			});
 			$scope.parsel_history = array;
+			$scope.selected_parsel = parsel;
 	      }
 		});
 
+		$("#parsel_history_header").show();
 		$("#parsel_history").show();
 		$("#history_parsel_id").show();
 	}
