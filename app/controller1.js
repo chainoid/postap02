@@ -17,9 +17,10 @@ var path          = require('path');
 var util          = require('util');
 var os            = require('os');
 
-const lu          = require("./ledgerUtils.js");
+// Custom utils
+const ledgerUtils  = require("./ledgerUtils.js");
 
- module.exports = (function() {
+module.exports = (function() {
 
 
 
@@ -51,7 +52,7 @@ return{
 			        // TODO : add fromKey, toKey
 		};
 
-		var model = cu.GetRecordMapModel(queryClientListParams, 'clients', 'queryAllClients', 'client-channel');
+		var model = GetRecordMapModel(queryClientListParams, 'clients', 'queryAllClients', 'client-channel');
 
 		ReadFromLedger(model, res);	    
 	},

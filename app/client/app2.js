@@ -24,18 +24,7 @@ app.controller('appController', function ($scope, appFactory) {
 
 	
 	//$("#error_item_source").hide();
-
-	//$("#error_query").hide();
-	//$("#error_sender").hide();
-	//$("#error_query_id").hide();
-	//$("#error_query_student").hide();
-	//$("#error_prepare_delivery").hide();
-	//$("#error_pass_exam").hide();
-	//$("#error_student_record").hide();
-	//$("#item_list").hide();
 			
-
-	$("#take_form").hide();
 
 	$scope.queryAllClients = function () {
 
@@ -71,21 +60,7 @@ app.controller('appController', function ($scope, appFactory) {
 		});
 	}
 
-	$scope.generateSetForGroup = function () {
-
-		appFactory.generateSetForGroup($scope.generator, function (data) {
-			$scope.generated_set_for_group = data;
-
-			if ($scope.generated_set_for_group == "error_generated") {
-				console.log()
-				$("#error_generated").show();
-			} else {
-				$("#error_generated").hide();
-				$("#success_generated").show();
-			}
-
-		});
-	}
+	
 
 	$scope.getUserRecord = function () {
 		
@@ -122,24 +97,7 @@ app.controller('appController', function ($scope, appFactory) {
 		  }
 		  $scope.delicase = item;
 	}
-
-	$scope.deliveryItem = function () {
-
-		var delicase = $scope.delicase;
-
-		appFactory.deliveryItem(delicase, function (data) {
-
-			if (data == "Could not locate undelivered item") {
-				$("#error_item_source").show();
-				$("#success_delivery").hide();
-			} else {	
-				$("#error_item_source").hide();
-				$("#success_delivery").show();
-			}
-			
-			$scope.exam_result = data;
-		});
-	}
+	
 
 });
 
@@ -165,27 +123,8 @@ app.factory('appFactory', function ($http) {
 		});
 	}
 
-	
-	factory.generateSetForGroup = function (generator, callback) {
-
-		var generator = generator.groupName + "-" + generator.itemName + "-" + generator.deliveryMan;
-
-		$http.get('/generate_set_for_group/' + generator).success(function (output) {
-			callback(output)
-		});
-	}
-
 	factory.getUserRecord = function (id, callback) {
 		$http.get('/get_user_record/' + id).success(function (output) {
-			callback(output)
-		});
-	}
-
-	factory.deliveryItem = function (input, callback) {
-
-		var params = input.userId + "-" + input.itemName + "-" + input.rate;
-
-		$http.get('/delivery_item/' + params).success(function (output) {
 			callback(output)
 		});
 	}
