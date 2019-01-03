@@ -95,15 +95,19 @@
       <div class="form-group">
           <label>Accept the Parsel</label><br>
 
-          <div class="alert alert-danger" role="alert" id="error_accept_parsel">
-            Error: Please enter a valid parsel Id
+          <div class="alert alert-danger" role="alert" id="error_accept_parsel_id">
+            {{accepted_parsel_result}}
+          </div>
+
+          <div class="alert alert-danger" role="alert" id="error_accept_parsel_done">
+            {{accepted_parsel_result}}
           </div>
 
           <div class="alert alert-success" role="alert" id="success_accepted">
             Success! Tx ID: {{accepted_parsel_result}}
           </div>
     
-           Parsel ID:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: AB17" ng-model="order.parselId">
+           Parsel ID:  <input id="createName" class="form-control input-field" type="text" placeholder="Ex: AB17" ng-model="accept.parselId">
            Branch Id: <input class="form-control input-field" name="assetSelect" type="text" placeholder="Ex: 003" ng-model="accept.branchId">
           <input id="prepareForDeliveryId" type="submit" value="Accept parsel" class="btn btn-warning" ng-click="acceptParsel()">
       </div>

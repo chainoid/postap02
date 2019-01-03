@@ -12,7 +12,8 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#success_create_order").hide();
 
 	// Accept parsel
-	$("#error_accept_parsel").hide();
+	$("#error_accept_parsel_id").hide();
+	$("#error_accept_parsel_done").hide();
 	$("#success_accepted").hide();
 
 
@@ -48,20 +49,25 @@ app.controller('appController', function ($scope, appFactory) {
 
 		appFactory.acceptParsel($scope.accept, function (data) {
 
-			if (data == "Could not locate undelivered item") {
-				$("#error_accept_parsel").show();
-				$("#success_accepted").hide();
-			} 
-			
-			else {	
-				$("#error_accept_parsel").hide();
-				$("#success_accepted").show();
-			}
-			
 			$scope.accepted_parsel_result = data;
+			
+			$("#error_accept_parsel_id").hide();
+			$("#error_accept_parsel_done").hide();
+			$("#success_accepted").show();
+
+			if ($scope.accepted_parsel_result == "Error: Parsel not found") {
+				$("#error_accept_parsel_id").show();
+				$("#error_accept_parsel_done").hide();
+				$("#success_accepted").hide();
+			
+
+			} else if ($scope.accepted_parsel_result == "Error: Already accepted") {
+				$("#error_accept_parsel_id").hide();
+				$("#error_accept_parsel_done").show();
+				$("#success_accepted").hide();
+		    }					
 		});
 	}
-
 
 	$scope.switchCourier = function () {
 
@@ -79,49 +85,7 @@ app.controller('appController', function ($scope, appFactory) {
 		});
 	}
 
-	$scope.prepareForDelivery = function () {
-
-		var order = $scope.order;
-
-		appFactory.prepareForDelivery(order, function (data) {
-
-			if (data == "No group/item found") {
-				console.log("No group/item found");
-				$("#error_prepare_delivery").show();
-				$("#item_list").hide();
-			
-			} else {
-				$("#error_prepare_delivery").hide();
-				$("#item_list").show();
-				$("#take_form").hide(); 
-			}
-
-			var array = [];
-			for (var i = 0; i < data.length; i++) {
-				data[i].Record.Key = data[i].Key;
-				array.push(data[i].Record);
-			}
-			array.sort(function (a, b) {
-				return parseFloat(a.Key) - parseFloat(b.Key);
-			});
-			$scope.item_list = array;
-		});
-	}
-
-
-	$scope.beforeDeliveryItem = function (item) {
-		        
-          if (item.rate != "") {
-			$("#takeTheTestId").hide();	 
-			$("#take_form").hide(); 
-		  } else {
-			$("#takeTheTestId").show();	
-			$("#take_form").show();
-			$("#success_delivery").hide();
-		  }
-		  $scope.delicase = item;
-	}
-
+	
 	$scope.deliveryParsel = function () {
 	
 
@@ -183,16 +147,7 @@ app.factory('appFactory', function ($http) {
 			callback(output)
 		});
 	}
-
-	factory.prepareForDelivery = function (exam, callback) {
-
-		var params = exam.group + "-" + exam.course;
-
-		$http.get('/prepare_for_delivery/' + params).success(function (output) {
-			callback(output)
-		});
-	}
-
+	
 	factory.deliveryParsel = function (delivery, callback) {
 
 		var params = delivery.parselId;

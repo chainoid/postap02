@@ -93,6 +93,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.parselHistory(APIstub, args)
 	} else if function == "switchCourier" {
 		return s.switchCourier(APIstub, args)
+	} else if function == "acceptParsel" {
+		return s.acceptParsel(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -280,6 +282,57 @@ func (s *SmartContract) querySender(APIstub shim.ChaincodeStubInterface, args []
 	fmt.Printf("- querySender:\n%s\n", buffer.String())
 
 	return shim.Success(buffer.Bytes())
+}
+
+
+
+/*
+  * The switchCourier method *
+ The data in the world state can be updated with who has possession.
+ This function takes in 2 arguments, courier id and timestamp of action.
+*/
+func (s *SmartContract) acceptParsel(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	parselAsBytes, _ := APIstub.GetState(args[0])
+	if parselAsBytes == nil {
+
+        fmt.Printf("- acceptParsel with id: %s Parsel not found \n", args[0])
+
+		return shim.Error("Parsel not found")
+	}
+	parsel := Parsel{}
+
+	json.Unmarshal(parselAsBytes, &parsel)
+
+
+    // Chack that parsel not accepted before 
+	if parsel.SenderBranch != "" {
+
+		fmt.Printf("- acceptParsel with id: %s Already accepted \n", args[0])
+
+		return shim.Error("Already accepted")
+	}
+
+
+	// Normally check that the specified argument is a valid holder of parsel
+	// we are skipping this check for this example
+	parsel.SenderBranch = args[1]
+
+	parsel.SenderTS = time.Now().Format(time.RFC3339)
+
+	parselAsBytes, _ = json.Marshal(parsel)
+	err := APIstub.PutState(args[0], parselAsBytes)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to change courier for parsel: %s", args[0]))
+	}
+
+	fmt.Printf("- acceptParsel:\n%s\n", parselAsBytes)
+
+	return shim.Success(nil)
 }
 
 

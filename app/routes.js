@@ -31,7 +31,11 @@ module.exports = function(app){
   app.get('/create_parsel_order/:order', function(req, res){
     parsel.create_parsel_order(req, res);
   });
+  app.get('/accept_parsel/:accept', function(req, res){
+    parsel.accept_parsel(req, res);
+  });
   app.get('/switch_courier/:switch', function(req, res){
     parsel.switch_courier(req, res);
   });
+
 }

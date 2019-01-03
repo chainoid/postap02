@@ -86,6 +86,33 @@ return{
 		WriteToLedger(model, res);
 	},
 
+
+	accept_parsel: function(req, res) {
+
+		console.log(" put an sender branch and TS: ");
+
+		var array = req.params.accept.split("-");
+		var parselId  = array[0]
+		var branchId = array[1]
+
+		console.log(array);
+
+		var acceptParsel = {
+            ParselId:    parselId,
+            BranchId:    branchId
+		};
+
+		// Retrieve Blockchain Parameter Mapping Model
+    	var model = GetRecordMapModel(acceptParsel, 'parsels', 'acceptParsel', 'parsel-channel');
+		
+		console.log(" The model before write to the ledger: ",  model);
+		
+		WriteToLedger(model, res);
+       },
+
+
+
+
 	switch_courier: function(req, res) {
 		console.log("put a new courier name and timestamp: ");
 
