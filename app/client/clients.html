@@ -109,10 +109,9 @@
           Action
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="index.html"> Accept</a> <br/>
-          <a class="dropdown-item" href="service.html"> Tranfer</a> <br/>
-          <a class="dropdown-item" href="clients.html"> Return</a> <br/>
-          <a class="dropdown-item" href="accounts.html"> Delivery</a> <br/>
+          <a class="dropdown-item" href="" ng-click="getClientSentParsels(client)"> Sent parsels</a><br/>
+          <a class="dropdown-item" href="" ng-click="getClientReceivedParsels(client)"> Received parsels</a> <br/>
+          <a class="dropdown-item" href=""> Rate history</a> <br/>
           <a class="dropdown-item" href="accounts.html"> History</a> <br/>
         </div>
       </div></td>
@@ -130,6 +129,29 @@
       Branch: <input class="form-control input-field" type="text" placeholder=" Ex: 003" ng-model="client.branchId">
       <input id="addClientId" type="submit" value="Add client" class="btn btn-warning" ng-click="addClient()">
     </div>
+
+    <table id="client_parsels" class="table" align="center">
+      <tr>
+        <th>ID</th>
+        <th>Sender TS</th>
+        <th>Sender Branch</th>
+        <th>Courier ID</th>
+        <th>Courier TS</th>
+        <th>Receiver ID</th>
+        <th>Receiver Branch</th>
+        <th>Receiver TS</th>
+  
+      <tr ng-repeat="parsel in client_parsels">
+        <td>{{parsel.Key}}</td>
+        <td>{{parsel.senderTS}}</td>
+        <td>{{parsel.senderBranch}}</td>
+        <td>{{parsel.courierId}}</td>
+        <td>{{parsel.courierTS}}</td>
+        <td>{{parsel.receiverId}}</td>
+        <td>{{parsel.receiverBranch}}</td>
+        <td>{{parsel.receiverTS}}</td>
+      </tr>
+    </table>
       
       <div class="dropdown dropup">
         <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

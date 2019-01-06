@@ -59,8 +59,63 @@ app.controller('appController', function ($scope, appFactory) {
 			$("#success_add_client").show();
 		});
 	}
-
 	
+    $scope.getClientSentParsels = function (client) {
+
+		var name = client.name;
+
+		appFactory.clientSentParsels(name, function (data) {
+	
+
+			if (data  == "Error of query request"){
+				console.log()
+			//	$("#error_query_all").show();
+				$("#client_parsels").hide();
+				
+			} else{
+				$("#client_parsels").show();
+			//	$("#error_query_all").hide();
+
+			var array = [];
+			for (var i = 0; i < data.length; i++) {
+				data[i].Record.Key = data[i].Key;
+				array.push(data[i].Record);
+			}
+			array.sort(function(a, b) {
+			    return a.name.localeCompare(b.name);
+			});
+			$scope.client_parsels = array;
+		  }
+		});
+	}
+
+	 $scope.getClientReceivedParsels = function (client) {
+
+		var name = client.name;
+
+	 	appFactory.clientReceivedParsels(name, function (data) {
+
+			if (data  == "Error of query request"){
+				console.log()
+			//	$("#error_query_all").show();
+				$("#client_parsels").hide();
+				
+			} else{
+				$("#client_parsels").show();
+			//	$("#error_query_all").hide();
+
+			var array = [];
+			for (var i = 0; i < data.length; i++) {
+				data[i].Record.Key = data[i].Key;
+				array.push(data[i].Record);
+			}
+			array.sort(function(a, b) {
+			    return a.name.localeCompare(b.name);
+			});
+			$scope.client_parsels = array;
+			} 
+		});
+	}
 
 	$scope.getUserRecord = function () {
 		
@@ -121,6 +176,20 @@ app.factory('appFactory', function ($http) {
 		$http.get('/add_client/' + client).success(function (output) {
 			callback(output)
 		});
+	}
+
+	factory.clientSentParsels = function (name, callback) {
+		
+		$http.get('/get_sent_parsels/' + name).success(function (output) {
+			callback(output)
+		});
+	}
+
+	factory.clientReceivedParsels = function (name, callback) {
+
+	 	$http.get('/get_received_parsels/' + name).success(function (output) {
+	 		callback(output)
+	 	});
 	}
 
 	factory.getUserRecord = function (id, callback) {

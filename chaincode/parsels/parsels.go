@@ -87,9 +87,11 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.queryAllParsels(APIstub)
 	} else if function == "deliveryParsel" {
 		return s.deliveryParsel(APIstub, args)
-	} else if function == "querySender" {
-		return s.querySender(APIstub, args)
-	} else if function == "parselHistory" {
+	} else if function == "clientSentParsels" {
+		return s.clientSentParsels(APIstub, args)
+	}  else if function == "clientReceivedParsels" {
+		return s.clientReceivedParsels(APIstub, args)
+	}else if function == "parselHistory" {
 		return s.parselHistory(APIstub, args)
 	} else if function == "switchCourier" {
 		return s.switchCourier(APIstub, args)
@@ -110,7 +112,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 		Parsel{SenderId: "A2", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "002", CourierId: "", CourierTS: "",  ReceiverId: "MR2", ReceiverTS: "", ReceiverBranch: "201"},
 		Parsel{SenderId: "A3", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "003", CourierId: "", CourierTS: "",  ReceiverId: "MR3", ReceiverTS: "", ReceiverBranch: "301"},
 		Parsel{SenderId: "A4", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "004", CourierId: "", CourierTS: "",  ReceiverId: "MR4", ReceiverTS: "", ReceiverBranch: "301"},
-    	Parsel{SenderId: "A4", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "005", CourierId: "", CourierTS: "",  ReceiverId: "MR5", ReceiverTS: "", ReceiverBranch: "101"},
+    	Parsel{SenderId: "Alex", SenderTS: time.Now().Format(time.RFC3339), SenderBranch: "005", CourierId: "", CourierTS: "",  ReceiverId: "Ben", ReceiverTS: "", ReceiverBranch: "101"},
 	}
 
 	i := 0
@@ -219,12 +221,17 @@ func (s *SmartContract) queryAllParsels(APIstub shim.ChaincodeStubInterface) sc.
 }
 
 /*
-  * The querySender method *
+  * The clientSentParsels method *
  allows for assessing all the records from selected sender
 
  Returns JSON string containing results.
 */
-func (s *SmartContract) querySender(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) clientSentParsels(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
 
 	startKey := "0"
 	endKey := "9999"
@@ -279,11 +286,81 @@ func (s *SmartContract) querySender(APIstub shim.ChaincodeStubInterface, args []
 		return shim.Error(err.Error())
 	}
 
-	fmt.Printf("- querySender:\n%s\n", buffer.String())
+	fmt.Printf("- getClientSentParsels:\n%s\n", buffer.String())
 
 	return shim.Success(buffer.Bytes())
 }
 
+
+/*
+  * The clientReceivedParsels method *
+ allows for assessing all the records from selected sender
+
+ Returns JSON string containing results.
+*/
+func (s *SmartContract) clientReceivedParsels(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	startKey := "0"
+	endKey := "9999"
+
+	resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	defer resultsIterator.Close()
+
+	// buffer is a JSON array containing QueryResults
+	var buffer bytes.Buffer
+
+	buffer.WriteString("[")
+
+	bArrayMemberAlreadyWritten := false
+
+	for resultsIterator.HasNext() {
+		queryResponse, err := resultsIterator.Next()
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+		// Create an object
+		parsel := Parsel{}
+		// Unmarshal record to parsel
+		json.Unmarshal(queryResponse.Value, &parsel)
+
+		// Add only filtered by sender records
+		if parsel.ReceiverId == args[0] {
+
+			// Add comma before array members,suppress it for the first array member
+			if bArrayMemberAlreadyWritten == true {
+				buffer.WriteString(",")
+			}
+
+			buffer.WriteString("{\"Key\":")
+			buffer.WriteString("\"")
+			buffer.WriteString(queryResponse.Key)
+			buffer.WriteString("\"")
+
+			buffer.WriteString(", \"Record\":")
+			// Record is a JSON object, so we write as-is
+			buffer.WriteString(string(queryResponse.Value))
+			buffer.WriteString("}")
+			bArrayMemberAlreadyWritten = true
+		}
+	}
+	buffer.WriteString("]")
+
+	if bArrayMemberAlreadyWritten == false {
+		return shim.Error(err.Error())
+	}
+
+	fmt.Printf("- clientReceivedParsels:\n%s\n", buffer.String())
+
+	return shim.Success(buffer.Bytes())
+}
 
 
 /*

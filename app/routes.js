@@ -19,8 +19,11 @@ module.exports = function(app){
   app.get('/parsel_history/:parselId', function(req, res){
     parsel.parsel_history(req, res);
   });
-  app.get('/get_sender/:name', function(req, res){
-    parsel.get_sender(req, res);
+  app.get('/get_sent_parsels/:name', function(req, res){
+    parsel.get_sent_parsels(req, res);
+  });
+  app.get('/get_received_parsels/:name', function(req, res){
+    parsel.get_received_parsels(req, res);
   });
   app.get('/get_all_clients', function(req, res){
     parsel.get_all_clients(req, res);
