@@ -244,7 +244,6 @@ func (s *SmartContract) clientSentParsels(APIstub shim.ChaincodeStubInterface, a
 
 	// buffer is a JSON array containing QueryResults
 	var buffer bytes.Buffer
-
 	buffer.WriteString("[")
 
 	bArrayMemberAlreadyWritten := false
@@ -282,9 +281,9 @@ func (s *SmartContract) clientSentParsels(APIstub shim.ChaincodeStubInterface, a
 	}
 	buffer.WriteString("]")
 
-	if bArrayMemberAlreadyWritten == false {
-		return shim.Error(err.Error())
-	}
+	//if bArrayMemberAlreadyWritten == false {
+	//	return shim.Error("No data found")
+	//}
 
 	fmt.Printf("- getClientSentParsels:\n%s\n", buffer.String())
 
@@ -353,9 +352,9 @@ func (s *SmartContract) clientReceivedParsels(APIstub shim.ChaincodeStubInterfac
 	}
 	buffer.WriteString("]")
 
-	if bArrayMemberAlreadyWritten == false {
-		return shim.Error(err.Error())
-	}
+	//if bArrayMemberAlreadyWritten == false {
+	//	return shim.Error("No data found")
+	//}
 
 	fmt.Printf("- clientReceivedParsels:\n%s\n", buffer.String())
 

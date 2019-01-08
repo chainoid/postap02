@@ -12,19 +12,13 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#all_clients").hide();
 
 	$("#success_add_client").hide();
-	
-	//$("#error_add_group").hide();
-	//$("#success_add_group").hide();
 
-	//$("#error_add_user").hide();
-	//$("#success_add_user").hide();
+	$("#client_sent_parsels").hide();
+	$("#error_no_sent_data_found").hide();
 
-	//$("#success_generated").hide();
-	//$("#error_generated").hide();
-
-	
-	//$("#error_item_source").hide();
-			
+	$("#client_rec_parsels").hide();
+	$("#error_no_rec_data_found").hide();
+		
 
 	$scope.queryAllClients = function () {
 
@@ -66,15 +60,16 @@ app.controller('appController', function ($scope, appFactory) {
 
 		appFactory.clientSentParsels(name, function (data) {
 	
-
-			if (data  == "Error of query request"){
-				console.log()
-			//	$("#error_query_all").show();
-				$("#client_parsels").hide();
+			if (data  == "Error: No data found"){
+				$("#error_no_sent_data_found").show();
+				$("#client_sent_parsels").hide();
+				$("#client_rec_parsels").hide();
+				$("#error_no_rec_data_found").hide();
 				
 			} else{
-				$("#client_parsels").show();
-			//	$("#error_query_all").hide();
+				$("#client_sent_parsels").show();
+				$("#client_rec_parsels").hide();
+				$("#error_no_sent_data_found").hide();
 
 			var array = [];
 			for (var i = 0; i < data.length; i++) {
@@ -82,9 +77,9 @@ app.controller('appController', function ($scope, appFactory) {
 				array.push(data[i].Record);
 			}
 			array.sort(function(a, b) {
-			    return a.name.localeCompare(b.name);
+			    return a.senderTS.localeCompare(b.senderTS);
 			});
-			$scope.client_parsels = array;
+			$scope.client_sent_parsels = array;
 		  }
 		});
 	}
@@ -95,24 +90,26 @@ app.controller('appController', function ($scope, appFactory) {
 
 	 	appFactory.clientReceivedParsels(name, function (data) {
 
-			if (data  == "Error of query request"){
-				console.log()
-			//	$("#error_query_all").show();
-				$("#client_parsels").hide();
+			if (data  == "Error: No data found"){
+				$("#error_no_rec_data_found").show();
+				$("#error_no_sent_data_found").hide();
+				$("#client_sent_parsels").hide();
+				$("#client_rec_parsels").hide();
 				
 			} else{
-				$("#client_parsels").show();
-			//	$("#error_query_all").hide();
-
-			var array = [];
-			for (var i = 0; i < data.length; i++) {
+				$("#error_no_rec_data_found").hide();
+				$("#client_sent_parsels").hide();
+				$("#client_rec_parsels").show();
+			
+			  var array = [];
+			  for (var i = 0; i < data.length; i++) {
 				data[i].Record.Key = data[i].Key;
 				array.push(data[i].Record);
 			}
 			array.sort(function(a, b) {
-			    return a.name.localeCompare(b.name);
+			    return a.senderTS.localeCompare(b.senderTS);
 			});
-			$scope.client_parsels = array;
+			$scope.client_rec_parsels = array;
 			} 
 		});
 	}

@@ -131,12 +131,17 @@ var os            = require('os');
             if (query_responses && query_responses.length == 1) {
                 if (query_responses[0] instanceof Error) {
                     console.error("error from query = ", query_responses[0]);
-                } else {
-                    console.log("Response is ", query_responses[0].toString());
-                    res.json(JSON.parse(query_responses[0].toString()));
-                }
+                } else  if  (util.format("%s", query_responses[0])  == "[]") {
+                            console.log("No data found");
+                            res.send("Error: No data found");  
+                         } else  {
+                           console.log("Response is ", query_responses[0].toString());
+                           res.json(JSON.parse(query_responses[0].toString()));
+                         }
+               
             } else {
                 console.log("No payloads were returned from query");
+                res.send("Error: No data found");
             }
         }).catch((err) => {
             console.error('Failed to query successfully :: ' + err);
@@ -296,7 +301,7 @@ var os            = require('os');
         }
     }
     
-    module.exports.IsNullOrWhiteSpace = IsNullOrWhiteSpace
+    //module.exports.IsNullOrWhiteSpace = IsNullOrWhiteSpace
     module.exports.GetRecordMapModel  = GetRecordMapModel   
     module.exports.ReadFromLedger     = ReadFromLedger   
     module.exports.WriteToLedger      = WriteToLedger  

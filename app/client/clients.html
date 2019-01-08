@@ -87,7 +87,7 @@
      Error of query request
   </div>
 
-  <table id="all_clients" class="table" align="center">
+  <table id="all_clients" class="table table-hover" align="center">
     <tr>
       <th>ID</th>
       <th>Name</th>
@@ -118,19 +118,13 @@
     </tr>
   </table>
 
-  <div class="form-group">
-      <label>Add client into System</label><br/>
-      <div class="alert alert-success" role="alert" id="success_add_client">
-        Success! Tx ID: {{accepted_client_id}}
-      </div>
-      Name: <input class="form-control input-field" type="text" placeholder=" Ex: John" ng-model="client.name"> 
-      Address: <input class="form-control input-field" type="text" placeholder=" Ex: Main str. 34" ng-model="client.address">
-      Phone: <input class="form-control input-field" type="text" placeholder=" 380-45-55" ng-model="client.phone">
-      Branch: <input class="form-control input-field" type="text" placeholder=" Ex: 003" ng-model="client.branchId">
-      <input id="addClientId" type="submit" value="Add client" class="btn btn-warning" ng-click="addClient()">
-    </div>
+  
 
-    <table id="client_parsels" class="table" align="center">
+    <div class="alert alert-danger" role="alert" id="error_no_sent_data_found">
+      No sent parsel found  
+    </div>
+ 
+    <table id="client_sent_parsels" class="table" align="center">
       <tr>
         <th>ID</th>
         <th>Sender TS</th>
@@ -141,7 +135,7 @@
         <th>Receiver Branch</th>
         <th>Receiver TS</th>
   
-      <tr ng-repeat="parsel in client_parsels">
+      <tr ng-repeat="parsel in client_sent_parsels">
         <td>{{parsel.Key}}</td>
         <td>{{parsel.senderTS}}</td>
         <td>{{parsel.senderBranch}}</td>
@@ -153,6 +147,46 @@
       </tr>
     </table>
       
+
+    <div class="alert alert-danger" role="alert" id="error_no_rec_data_found">
+      No received parsels found  
+    </div>
+ 
+    <table id="client_rec_parsels" class="table" align="center">
+      <tr>
+        <th>ID</th>
+        <th>Sender TS</th>
+        <th>Sender Branch</th>
+        <th>Courier ID</th>
+        <th>Courier TS</th>
+        <th>Receiver ID</th>
+        <th>Receiver Branch</th>
+        <th>Receiver TS</th>
+  
+      <tr ng-repeat="parsel in client_rec_parsels">
+        <td>{{parsel.Key}}</td>
+        <td>{{parsel.senderTS}}</td>
+        <td>{{parsel.senderBranch}}</td>
+        <td>{{parsel.courierId}}</td>
+        <td>{{parsel.courierTS}}</td>
+        <td>{{parsel.receiverId}}</td>
+        <td>{{parsel.receiverBranch}}</td>
+        <td>{{parsel.receiverTS}}</td>
+      </tr>
+    </table>
+
+    <div class="form-group">
+      <label>Add client into System</label><br/>
+      <div class="alert alert-success" role="alert" id="success_add_client">
+        Success! Tx ID: {{accepted_client_id}}
+      </div>
+      Name: <input class="form-control input-field" type="text" placeholder=" Ex: John" ng-model="client.name"> 
+      Address: <input class="form-control input-field" type="text" placeholder=" Ex: Main str. 34" ng-model="client.address">
+      Phone: <input class="form-control input-field" type="text" placeholder=" 380-45-55" ng-model="client.phone">
+      Branch: <input class="form-control input-field" type="text" placeholder=" Ex: 003" ng-model="client.branchId">
+      <input id="addClientId" type="submit" value="Add client" class="btn btn-warning" ng-click="addClient()">
+    </div>
+
       <div class="dropdown dropup">
         <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Switch to Page
