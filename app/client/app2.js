@@ -98,6 +98,7 @@ app.controller('appController', function ($scope, appFactory) {
 				
 			} else{
 				$("#error_no_rec_data_found").hide();
+				$("#error_no_sent_data_found").hide();
 				$("#client_sent_parsels").hide();
 				$("#client_rec_parsels").show();
 			
