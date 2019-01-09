@@ -126,7 +126,7 @@
  
     <table id="client_sent_parsels" class="table" align="center">
       <tr>
-        <th>ID</th>
+        <th>Parsel ID</th>
         <th>Sender TS</th>
         <th>Sender Branch</th>
         <th>Courier ID</th>
@@ -154,22 +154,22 @@
  
     <table id="client_rec_parsels" class="table" align="center">
       <tr>
-        <th>ID</th>
+        <th>Parsel ID</th>
+        <th>Sender ID</th>
         <th>Sender TS</th>
         <th>Sender Branch</th>
         <th>Courier ID</th>
         <th>Courier TS</th>
-        <th>Receiver ID</th>
         <th>Receiver Branch</th>
         <th>Receiver TS</th>
   
       <tr ng-repeat="parsel in client_rec_parsels">
         <td>{{parsel.Key}}</td>
+        <td>{{parsel.senderId}}</td>
         <td>{{parsel.senderTS}}</td>
         <td>{{parsel.senderBranch}}</td>
         <td>{{parsel.courierId}}</td>
         <td>{{parsel.courierTS}}</td>
-        <td>{{parsel.receiverId}}</td>
         <td>{{parsel.receiverBranch}}</td>
         <td>{{parsel.receiverTS}}</td>
       </tr>
