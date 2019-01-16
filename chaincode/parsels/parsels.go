@@ -97,6 +97,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.switchCourier(APIstub, args)
 	} else if function == "acceptParsel" {
 		return s.acceptParsel(APIstub, args)
+	} else if function == "deleteParsel" {
+		return s.deleteParsel(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -456,7 +458,7 @@ func (s *SmartContract) switchCourier(APIstub shim.ChaincodeStubInterface, args 
 /*
   * The deliveryParsel method *
  The data in the world state can be updated with who has possession.
- This function takes in 2 arguments, parsel id and timestamp of delivery.
+ This function takes in 1 arguments, parsel id. Timestamp of delivery generate by fact.
 */
 func (s *SmartContract) deliveryParsel(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
@@ -496,6 +498,53 @@ func (s *SmartContract) deliveryParsel(APIstub shim.ChaincodeStubInterface, args
 
 	return shim.Success(nil)
 }
+
+
+/*
+ * The deleteParsel method *
+   The data in the world state can be updated with who has possession.
+   This function takes in 1 arguments, parsel id. Timestamp of delivery generate by fact.
+*/
+func (s *SmartContract) deleteParsel(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	parselAsBytes, _ := APIstub.GetState(args[0])
+	if parselAsBytes == nil {
+
+        fmt.Printf("- deleteParsel with id: %s Parsel not found \n", args[0])
+
+		return shim.Error("Parsel not found")
+	}
+	parsel := Parsel{}
+
+	json.Unmarshal(parselAsBytes, &parsel)
+
+	// Normally check that the specified argument is a valid holder of parsel
+	// we are skipping this check for this example
+	if parsel.ReceiverTS == "" {
+
+		fmt.Printf("- deleteParsel with id: %s Already delivered \n", args[0])
+
+		return shim.Error("Not delivered")
+	}
+
+	//parsel.ReceiverTS = time.Now().Format(time.RFC3339)
+    //
+    //parselAsBytes, _ = json.Marshal(parsel)
+
+    err := APIstub.DelState(args[0])
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to change status of parsel: %s", args[0]))
+	}
+
+	fmt.Printf("- deleteParsel:\n%s\n", parselAsBytes)
+
+	return shim.Success(nil)
+}
+
 
 /*
  * The getHistoryForKey method *

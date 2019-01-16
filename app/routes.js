@@ -40,5 +40,7 @@ module.exports = function(app){
   app.get('/switch_courier/:switch', function(req, res){
     parsel.switch_courier(req, res);
   });
-
+  app.get('/delete_parsel/:parselId', function(req, res){
+    parsel.delete_parsel(req, res);
+  });
 }

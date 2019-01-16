@@ -306,6 +306,26 @@ return{
 		console.log(" The model before write to the ledger: ",  model);
 		
 		WriteToLedger(model, res);
+	},
+
+    delete_parsel: function(req, res){
+
+		console.log("Delete parsel from state database. ");
+
+		var parselId = req.params.parselId;
+		
+		var parsel = {
+            ParselId: parselId
+       	};
+
+        // Retrieve Blockchain Parameter Mapping Model
+		// param(s): record, chaincodeId, chaincodeFunction, channelId
+		var model = GetRecordMapModel(parsel, 'parsels', 'deleteParsel', 'parsel-channel');
+		
+		console.log(" The model before write to the ledger: ",  model);
+		
+		WriteToLedger(model, res);
 	}
+
 }
 })();

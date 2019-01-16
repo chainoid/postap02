@@ -16,9 +16,6 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#error_parsel_history").hide();
 	$("#parsel_history").hide();
 
-
-
-
 	$("#all_users").hide();
 
 	$("#error_add_group").hide();
@@ -29,7 +26,6 @@ app.controller('appController', function ($scope, appFactory) {
 
 	$("#success_generated").hide();
 	$("#error_generated").hide();
-
 	
 
 	$("#error_query").hide();
@@ -39,8 +35,11 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#error_prepare_delivery").hide();
 	$("#error_pass_exam").hide();
 	$("#error_student_record").hide();
-	$("#item_list").hide();
-		
+	
+	$("#error_id_delete_parsel").hide();
+	$("#error_not_delivered").hide();
+	$("#success_delete").hide();	
+
 
 	$scope.queryAllParsels = function(){
 
@@ -73,6 +72,9 @@ app.controller('appController', function ($scope, appFactory) {
 		$("#history_parsel").hide();
 		$("#query_parsel").hide();
 		$("#sender_parsels").hide();
+		$("#error_id_delete_parsel").hide();
+	    $("#error_not_delivered").hide();
+	    $("#success_delete").hide();	
 
 		$("#all_parsels").show();
 	}
@@ -129,20 +131,33 @@ app.controller('appController', function ($scope, appFactory) {
 			$("#all_users").show();
 		});
 	}
+	
+	$scope.deleteParsel = function (parsel) {
+	
 
-	$scope.beforeDeliveryItem = function (item) {
-		        
-          if (item.rate != "") {
-			$("#takeTheTestId").hide();	 
-			$("#take_form").hide(); 
-		  } else {
-			$("#takeTheTestId").show();	
-			$("#take_form").show();
-			$("#success_delivery").hide();
-		  }
-		  $scope.delicase = item;
+		var parselId = parsel.Key;
+
+		appFactory.deleteParsel(parselId, function (data) {
+
+			$scope.delete_parsel = data;
+			
+			$("#error_id_delete_parsel").hide();
+			$("#error_not_delivered").hide();
+			$("#success_delete").show();
+
+			if ($scope.delete_parsel == "Error: Parsel not found") {
+				$("#error_id_delete_parsel").show();
+				$("#error_not_delivered").hide();
+				$("#success_delete").hide();
+			
+			} else if ($scope.delete_parsel == "Error: Not delivered") {
+				$("#error_id_delete_parsel").hide();
+				$("#error_not_delivered").show();
+				$("#success_delete").hide();
+		    	
+        	} 
+		});
 	}
-
 	
 });
 
@@ -161,6 +176,12 @@ app.factory('appFactory', function ($http) {
 
 	factory.parselHistory = function(parselId, callback){
     	$http.get('/parsel_history/'+parselId).success(function(output){
+			callback(output)
+		});
+	}
+
+	factory.deleteParsel = function(parselId, callback){
+    	$http.get('/delete_parsel/'+parselId).success(function(output){
 			callback(output)
 		});
 	}

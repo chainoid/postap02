@@ -94,6 +94,18 @@
     <div class="alert alert-danger" role="alert" id="error_query_all">
       Error of query request
     </div>
+    
+    <div class="alert alert-danger" role="alert" id="error_id_delete_parsel">
+      Error Id for delete request
+    </div>
+
+    <div class="alert alert-danger" role="alert" id="error_not_delivered">
+      The undelivered parsel cannot be deleted 
+    </div>
+
+    <div class="alert alert-success" role="alert" id="success_delete">
+      Parsel deleted successfully 
+    </div>
 
     <table id="all_parsels" class="table" align="center">
       <tr>
@@ -128,6 +140,7 @@
             <a class="dropdown-item" href="clients.html"> Return</a> <br/>
             <a class="dropdown-item" href="accounts.html"> Delivery</a> <br/>
             <a class="dropdown-item" href="" ng-click="getParselHistory(parsel)"> History</a> <br/>
+            <a class="dropdown-item" href="" ng-click="deleteParsel(parsel)"> Delete</a> <br/>
           </div>
         </div></td>
       </tr>

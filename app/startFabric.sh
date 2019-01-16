@@ -21,6 +21,22 @@ fi
 cd ../network-config
 ./start.sh
 
+# Channel configuration
+
+# PARSEL
+# Create the channel
+docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp" peer0.org1.example.com peer channel create -o orderer.example.com:7050 -c parsel-channel -f /etc/hyperledger/configtx/channel1.tx
+# Join peer0.org1.example.com to the channel.
+docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp" peer0.org1.example.com peer channel join -b parsel-channel.block
+
+# CLIENT
+# Create the channel
+docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp" peer0.org1.example.com peer channel create -o orderer.example.com:7050 -c client-channel -f /etc/hyperledger/configtx/channel2.tx
+# Join peer0.org1.example.com to the channel.
+docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp" peer0.org1.example.com peer channel join -b client-channel.block
+
+
+
 # Now launch the CLI container in order to install, instantiate chaincode
 # and prime the ledger with our 5  parsels
 docker-compose -f ./docker-compose.yml up -d cli
