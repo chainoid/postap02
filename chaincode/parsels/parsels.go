@@ -589,7 +589,12 @@ func (s *SmartContract) parselHistory(APIstub shim.ChaincodeStubInterface, args 
 
 		// Record the body of JSON object, so we write as-is
 		buffer.WriteString(", \"Record\":")
-		buffer.WriteString(string(queryResponse.Value))
+
+		if queryResponse.Value != nil {
+    		buffer.WriteString(string(queryResponse.Value))
+		} else {
+			buffer.WriteString("{}")
+		}
 
 		buffer.WriteString("}")
 
