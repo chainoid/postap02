@@ -593,7 +593,13 @@ func (s *SmartContract) parselHistory(APIstub shim.ChaincodeStubInterface, args 
 		if queryResponse.Value != nil {
     		buffer.WriteString(string(queryResponse.Value))
 		} else {
-			buffer.WriteString("{}")
+			//buffer.WriteString("{}")
+
+			var parsel = Parsel{SenderId: "", SenderBranch: "", SenderTS: "", ReceiverId: "", ReceiverBranch: "", ReceiverTS: "", CourierId: "", CourierTS:"" }
+
+			parselAsBytes, _ := json.Marshal(parsel)
+			buffer.WriteString(string(parselAsBytes))
+
 		}
 
 		buffer.WriteString("}")

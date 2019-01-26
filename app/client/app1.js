@@ -103,7 +103,7 @@ app.controller('appController', function ($scope, appFactory) {
 				array.push(data[i].Record);
 			}
 			array.sort(function(a, b) {
-			    return a.senderTS.localeCompare(b.senderTS);
+			    return a.TxTS.localeCompare(b.TxTS);
 			});
 			$scope.parsel_history = array;
 			$scope.selected_parsel = parsel;
