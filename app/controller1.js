@@ -270,6 +270,22 @@ return{
 	},
 	
 
+	client_history: function(req, res){
+
+		console.log("get client history: ");
+
+		var clientKey = req.params.clientKey
+
+		var historytParams = {
+			Key:  clientKey
+		};
+
+		var model = GetRecordMapModel(historytParams, 'clients', 'clientHistory', 'client-channel');
+
+		ReadFromLedger(model, res);	   
+	},
+
+
     parsel_history: function(req, res){
 
 		console.log("get parsel history: ");

@@ -109,10 +109,10 @@
           Action
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="" ng-click="getClientSentParsels(client)"> Sent parsels</a><br/>
-          <a class="dropdown-item" href="" ng-click="getClientReceivedParsels(client)"> Received parsels</a> <br/>
+          <a class="dropdown-item" href="" ng-click="getClientSentParsels(client)"> View sent parsels</a><br/>
+          <a class="dropdown-item" href="" ng-click="getClientReceivedParsels(client)"> View received parsels</a> <br/>
           <a class="dropdown-item" href=""> Rate history</a> <br/>
-          <a class="dropdown-item" href="accounts.html"> History</a> <br/>
+          <a class="dropdown-item" href="" ng-click="getClientHistory(client)"> History</a> <br/>
         </div>
       </div></td>
     </tr>
@@ -174,6 +174,59 @@
         <td>{{parsel.receiverTS}}</td>
       </tr>
     </table>
+
+
+    <div class="form-group"  >
+      <label>Query History of Client</label>
+    </div>
+
+    <div class="alert alert-danger" role="alert" id="error_client_history">
+      Error: Cannot load history for this Client
+    </div>
+
+    <table id="client_history_header" class="table" align="center">
+       <tr>
+        <th>Client ID</th>
+        <!-- <th>Sender Branch</th>
+        <th>Sender TS</th>
+        <th>Receiver ID</th>
+        <th>Receiver Branch</th>
+        <th>Receiver TS</th> -->
+       </tr>
+       <tr>
+        <td>{{selected_client.Key}}</td>
+        <!-- <td>{{selected_parsel.senderBranch}}</td>
+        <td>{{selected_parsel.senderTS}}</td>
+        <td>{{selected_parsel.receiverId}}</td>
+        <td>{{selected_parsel.receiverBranch}}</td>
+        <td>{{selected_parsel.receiverTS}}</td> -->
+       </tr>
+
+    </table>
+
+    <table id="client_history" class="table" align="center">
+      <tr>
+        <th>Tx Timestamp</th>
+        <th>Tx Id</th>
+        <th>Name</th>
+        <th>Branch Id</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>Rate</th>
+        <th>Deleted</th>
+      </tr>
+      <tr ng-repeat="rec in client_history">
+        <td>{{rec.TxTS}}</td>
+        <td>{{rec.TxId}}</td>
+        <td>{{rec.name}}</td> 
+        <td>{{rec.branchId}}</td>
+        <td>{{rec.address}}</td>
+        <td>{{rec.phone}}</td>
+        <td>{{rec.rate}}</td>
+        <td>{{rec.IsDelete}}</td>  
+      </tr>
+    </table>
+
 
     <div class="form-group">
       <label>Add client into System</label><br/>

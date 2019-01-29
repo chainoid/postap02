@@ -18,7 +18,10 @@ app.controller('appController', function ($scope, appFactory) {
 
 	$("#client_rec_parsels").hide();
 	$("#error_no_rec_data_found").hide();
-		
+
+	$("#error_client_history").hide();
+	$("#client_history_header").hide();
+	$("#client_history").hide();
 
 	$scope.queryAllClients = function () {
 
@@ -115,6 +118,53 @@ app.controller('appController', function ($scope, appFactory) {
 		});
 	}
 
+
+	$scope.getClientHistory = function (client) {
+
+		var clientKey = client.Key;
+
+	 	appFactory.clientHistory(clientKey, function (data) {
+
+			if (data  == "Error: No data found"){
+				$("#error_no_sent_data_found").hide();
+				$("#client_sent_parsels").hide();
+				$("#client_rec_parsels").hide();
+				$("#error_client_history").show();
+				$("#client_history_header").hide();
+				$("#client_history").hide();
+				
+				
+			} else{
+				$("#error_no_rec_data_found").hide();
+				$("#error_no_sent_data_found").hide();
+				$("#client_sent_parsels").hide();
+				$("#client_rec_parsels").hide();
+				$("#client_rec_parsels").hide();
+				$("#error_client_history").hide();
+				$("#client_history_header").show();
+				$("#client_history").show();
+			
+			  var array = [];
+			  for (var i = 0; i < data.length; i++) {
+
+				// History fields added to record 
+				data[i].Record.TxId = data[i].TxId;
+				data[i].Record.TxTS = data[i].TxTS;
+				data[i].Record.IsDelete = data[i].IsDelete;
+
+				data[i].Record.Key = data[i].Key;
+				array.push(data[i].Record);
+			}
+			array.sort(function(a, b) {
+			    return a.TxTS.localeCompare(b.TxTS);
+			});
+			$scope.client_history = array;
+			$scope.selected_client = client;
+			} 
+		});
+	}
+
+
 	$scope.getUserRecord = function () {
 		
 		var id = $scope.id;
@@ -189,6 +239,13 @@ app.factory('appFactory', function ($http) {
 	 		callback(output)
 	 	});
 	}
+
+	factory.clientHistory = function (clientKey, callback) {
+
+		$http.get('/client_history/' + clientKey).success(function (output) {
+			callback(output)
+		});
+    }
 
 	factory.getUserRecord = function (id, callback) {
 		$http.get('/get_user_record/' + id).success(function (output) {

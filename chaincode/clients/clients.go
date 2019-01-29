@@ -89,8 +89,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.updateClient(APIstub, args)
 	} else if function == "removeClient" {
 		return s.removeClient(APIstub, args)
-	} else if function == "historyClient" {
-		return s.historyClient(APIstub, args)
+	} else if function == "clientHistory" {
+		return s.clientHistory(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -333,7 +333,7 @@ func (s *SmartContract) removeClient(APIstub shim.ChaincodeStubInterface, args [
 /*
  * The getHistoryForKey method *
  */
-func (s *SmartContract) historyClient(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) clientHistory(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	resultsIterator, err := APIstub.GetHistoryForKey(args[0])
 

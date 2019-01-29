@@ -28,6 +28,9 @@ module.exports = function(app){
   app.get('/get_all_clients', function(req, res){
     parsel.get_all_clients(req, res);
   });
+  app.get('/client_history/:clientKey', function(req, res){
+    parsel.client_history(req, res);
+  });
   app.get('/add_client/:client', function(req, res){
     parsel.add_client(req, res);
   });
