@@ -12,6 +12,7 @@ app.controller('appController', function ($scope, appFactory) {
 
 	$("#error_query_all").hide();
 
+	$("#history_header").hide();
 	$("#parsel_history_header").hide();
 	$("#error_parsel_history").hide();
 	$("#parsel_history").hide();
@@ -75,6 +76,9 @@ app.controller('appController', function ($scope, appFactory) {
 		$("#error_id_delete_parsel").hide();
 	    $("#error_not_delivered").hide();
 	    $("#success_delete").hide();	
+	    $("#history_header").hide();
+		$("#parsel_history_header").hide();
+		$("#parsel_history").hide();
 
 		$("#all_parsels").show();
 	}
@@ -91,6 +95,7 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#parsel_history").hide();
 			} else{
 				$("#error_parsel_history").hide();
+				$("#history_header").show();
 				$("#parsel_history").show();
 			
 			var array = [];

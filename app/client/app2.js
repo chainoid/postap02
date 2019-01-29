@@ -20,6 +20,7 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#error_no_rec_data_found").hide();
 
 	$("#error_client_history").hide();
+	$("#header_history").hide();
 	$("#client_history_header").hide();
 	$("#client_history").hide();
 
@@ -35,6 +36,9 @@ app.controller('appController', function ($scope, appFactory) {
 			} else{
 				$("#all_clients").show();
 				$("#error_query_all").hide();
+				$("#header_history").hide();
+				$("#client_history_header").hide();
+				$("#client_history").hide();
 
 			var array = [];
 			for (var i = 0; i < data.length; i++) {
@@ -129,11 +133,11 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#error_no_sent_data_found").hide();
 				$("#client_sent_parsels").hide();
 				$("#client_rec_parsels").hide();
+				$("#header_history").hide();
 				$("#error_client_history").show();
 				$("#client_history_header").hide();
 				$("#client_history").hide();
-				
-				
+								
 			} else{
 				$("#error_no_rec_data_found").hide();
 				$("#error_no_sent_data_found").hide();
@@ -141,6 +145,7 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#client_rec_parsels").hide();
 				$("#client_rec_parsels").hide();
 				$("#error_client_history").hide();
+				$("#header_history").show();
 				$("#client_history_header").show();
 				$("#client_history").show();
 			
