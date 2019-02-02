@@ -43,9 +43,26 @@ services:
         - ./config/:/etc/hyperledger/configtx
         - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/:/etc/hyperledger/msp/orderer
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/etc/hyperledger/msp/peerOrg1
-        #- /var/hyperledger/orderer0:/var/hyperledger/production
+        - /hyperledger/orderer0:/var/hyperledger/production
     networks:
       - basic
+
+
+  couchdb:
+     container_name: couchdb
+     image: hyperledger/fabric-couchdb
+     # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+     # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+     environment:
+       - COUCHDB_USER=admin
+       - COUCHDB_PASSWORD=passwd
+     ports:
+       - 5984:5984
+     volumes:
+       - /hyperledger/couchdb:/opt/couchdb/data  
+       #- /opt/couchdb/data  
+     networks:
+       - basic
 
   peer0.org1.example.com:
     container_name: peer0.org1.example.com
@@ -62,13 +79,13 @@ services:
       # # bridge network as the peers
       # # https://docs.docker.com/compose/networking/
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
-      #- CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      #- CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb:5984
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb:5984
       # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
       # provide the credentials for ledger to connect to CouchDB.  The username and password must
       # match the username and password set for the associated CouchDB.
-      #- CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
-      #- CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin  
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=passwd
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: peer node start
     # command: peer node start --peer-chaincodedev=true
@@ -77,30 +94,15 @@ services:
       - 7053:7053
     volumes:
         - /var/run/:/host/var/run/
-        #- /var/hyperledger/peer01:/var/hyperledger/production
+        - /var/hyperledger/peer01:/var/hyperledger/production
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/msp/peer
         - ./crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
         - ./config:/etc/hyperledger/configtx
     depends_on:
       - orderer.example.com
-   #   - couchdb
+      - couchdb
     networks:
       - basic
-
-  # couchdb:
-  #   container_name: couchdb
-  #   image: hyperledger/fabric-couchdb
-  #   # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
-  #   # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
-  #   environment:
-  #     - COUCHDB_USER=
-  #     - COUCHDB_PASSWORD=
-  #   ports:
-  #     - 5984:5984
-  #   #volumes:
-  #   #  - /var/hyperledger/couchdb:/opt/couchdb/data  
-  #   networks:
-  #     - basic
 
   cli:
     container_name: cli
