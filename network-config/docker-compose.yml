@@ -94,7 +94,7 @@ services:
       - 7053:7053
     volumes:
         - /var/run/:/host/var/run/
-        - /var/hyperledger/peer01:/var/hyperledger/production
+        - /hyperledger/peer01:/var/hyperledger/production
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/msp/peer
         - ./crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
         - ./config:/etc/hyperledger/configtx
