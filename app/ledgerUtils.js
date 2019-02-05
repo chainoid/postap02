@@ -112,13 +112,15 @@ var os            = require('os');
                 throw new Error('Failed to get user1.... run registerUser.js');
             }
             
-            var key = model && model.Record && model.Record.Key ? model.Record.Key : '';
+            //var key = model && model.Record && model.Record.Key ? model.Record.Key : '';
             
+            var argList = runFunction(model.Record);
+
             const request = {
                 chaincodeId: FabricNetwork.ChaincodeId, 
                 txId: FabricNetwork.TrxId,
                 fcn: FabricNetwork.ChaincodeFunction,
-                args: [key]
+                args: argList
             };
     
             console.log('request: ', request);

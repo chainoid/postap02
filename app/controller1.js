@@ -57,6 +57,29 @@ return{
 		ReadFromLedger(model, res);	    
 	},
 
+
+	get_clients_by_range: function(req, res){
+
+		console.log("getting clients by range: ");
+
+		var array = req.params.range.split("-");
+		console.log(array);
+
+		var fromIndex = array[0]
+		var toIndex = array[1]
+		
+		var queryRange = {
+            FromIndex:     fromIndex,
+            ToIndex:       toIndex
+		   };
+		   
+		// Retrieve Blockchain Parameter Mapping Model
+		// param(s): fromIndex, toIndex
+		var model = GetRecordMapModel(queryRange, 'clients', 'queryClientsByRange', 'client-channel');
+
+		ReadFromLedger(model, res);	    
+	},
+
 	create_parsel_order: function(req, res) {
 
 		console.log(" create order for new parsel: ");

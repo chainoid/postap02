@@ -11,6 +11,11 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#error_query_all").hide();
 	$("#all_clients").hide();
 
+
+	$("#error_query_range").hide();
+	$("#ranged_clients").hide();
+	
+
 	$("#success_add_client").hide();
 
 	$("#client_sent_parsels").hide();
@@ -49,6 +54,37 @@ app.controller('appController', function ($scope, appFactory) {
 			    return a.name.localeCompare(b.name);
 			});
 			$scope.all_clients = array;
+		  }
+		});
+	}
+
+
+	$scope.queryClientsByRange = function () {
+
+		appFactory.queryClientsByRange($scope.range, function (data) {
+
+
+			if (data  == "Error: No data found") {
+				console.log()
+				$("#error_query_range").show();
+				$("#ranged_clients").hide();
+				
+			} else{
+				$("#ranged_clients").show();
+				$("#error_query_range").hide();
+				$("#header_history").hide();
+				$("#client_history_header").hide();
+				$("#client_history").hide();
+
+			var array = [];
+			for (var i = 0; i < data.length; i++) {
+				data[i].Record.Key = data[i].Key;
+				array.push(data[i].Record);
+			}
+			array.sort(function(a, b) {
+			    return a.name.localeCompare(b.name);
+			});
+			$scope.ranged_clients = array;
 		  }
 		});
 	}
@@ -218,6 +254,15 @@ app.factory('appFactory', function ($http) {
 	factory.queryAllClients = function (callback) {
 
 		$http.get('/get_all_clients/').success(function (output) {
+			callback(output)
+		});
+	}
+
+	factory.queryClientsByRange = function (data, callback) {
+
+		var range = data.from + "-" + data.to;
+
+		$http.get('/get_clients_by_range/' + range).success(function (output) {
 			callback(output)
 		});
 	}

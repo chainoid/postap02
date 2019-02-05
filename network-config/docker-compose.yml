@@ -43,7 +43,7 @@ services:
         - ./config/:/etc/hyperledger/configtx
         - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/:/etc/hyperledger/msp/orderer
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/etc/hyperledger/msp/peerOrg1
-        - /hyperledger/orderer0:/var/hyperledger/production
+      #  - /hyperledger/orderer0:/var/hyperledger/production
     networks:
       - basic
 
@@ -58,9 +58,9 @@ services:
        - COUCHDB_PASSWORD=passwd
      ports:
        - 5984:5984
-     volumes:
-       - /hyperledger/couchdb:/opt/couchdb/data  
-       #- /opt/couchdb/data  
+     #volumes:
+      # - /hyperledger/couchdb:/opt/couchdb/data  
+   
      networks:
        - basic
 
@@ -94,7 +94,7 @@ services:
       - 7053:7053
     volumes:
         - /var/run/:/host/var/run/
-        - /hyperledger/peer01:/var/hyperledger/production
+      #  - /hyperledger/peer01:/var/hyperledger/production
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/msp/peer
         - ./crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
         - ./config:/etc/hyperledger/configtx

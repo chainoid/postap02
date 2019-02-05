@@ -91,6 +91,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.removeClient(APIstub, args)
 	} else if function == "clientHistory" {
 		return s.clientHistory(APIstub, args)
+	} else if function == "queryClientsByRange" {
+    	return s.queryClientsByRange(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -384,6 +386,155 @@ func (s *SmartContract) clientHistory(APIstub shim.ChaincodeStubInterface, args 
 	fmt.Printf("- historyClient:\n%s\n", buffer.String())
 
 	return shim.Success(buffer.Bytes())
+}
+
+// ===========================================================================================
+// getClientsByRange performs a range query based on the start and end keys provided.
+
+// Read-only function results are not typically submitted to ordering. If the read-only
+// results are submitted to ordering, or if the query is used in an update transaction
+// and submitted to ordering, then the committing peers will re-execute to guarantee that
+// result sets are stable between endorsement time and commit time. The transaction is
+// invalidated by the committing peers if the result set has changed between endorsement
+// time and commit time.
+// Therefore, range queries are a safe option for performing update transactions based on query results.
+// ===========================================================================================
+func (s *SmartContract) queryClientsByRange(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) < 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	startKey := args[0]
+	endKey   := args[1]
+
+	resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	defer resultsIterator.Close()
+
+	buffer, err := constructQueryResponseFromIterator(resultsIterator)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	fmt.Printf("- getClientsByRange queryResult:\n%s\n", buffer.String())
+
+	return shim.Success(buffer.Bytes())
+}
+
+
+// ===== Example: Pagination with Ad hoc Rich Query ========================================================
+//
+// queryClientsWithPagination uses a query string, page size and a bookmark to perform a query
+// for marbles. Query string matching state database syntax is passed in and executed as is.
+// The number of fetched records would be equal to or lesser than the specified page size.
+// Supports ad hoc queries that can be defined at runtime by the client.
+// If this is not desired, follow the queryMarblesForOwner example for parameterized queries.
+// Only available on state databases that support rich query (e.g. CouchDB)
+// Paginated queries are only valid for read only transactions.
+// =========================================================================================
+func (s *SmartContract) queryClientsWithPagination(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	//   0
+	// "queryString"
+	if len(args) < 3 {
+		return shim.Error("Incorrect number of arguments. Expecting 3")
+	}
+
+	queryString := args[0]
+	//return type of ParseInt is int64
+	pageSize, err := strconv.ParseInt(args[1], 10, 32)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	bookmark := args[2]
+
+	queryResults, err := getQueryResultForQueryStringWithPagination(APIstub, queryString, int32(pageSize), bookmark)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	return shim.Success(queryResults)
+}
+
+// =========================================================================================
+// getQueryResultForQueryStringWithPagination executes the passed in query string with
+// pagination info. Result set is built and returned as a byte array containing the JSON results.
+// =========================================================================================
+func getQueryResultForQueryStringWithPagination(stub shim.ChaincodeStubInterface, queryString string, pageSize int32, bookmark string) ([]byte, error) {
+
+	fmt.Printf("- getQueryResultForQueryString queryString:\n%s\n", queryString)
+
+	resultsIterator, responseMetadata, err := stub.GetQueryResultWithPagination(queryString, pageSize, bookmark)
+	if err != nil {
+		return nil, err
+	}
+	defer resultsIterator.Close()
+
+	buffer, err := constructQueryResponseFromIterator(resultsIterator)
+	if err != nil {
+		return nil, err
+	}
+
+	bufferWithPaginationInfo := addPaginationMetadataToQueryResults(buffer, responseMetadata)
+
+	fmt.Printf("- getQueryResultForQueryString queryResult:\n%s\n", bufferWithPaginationInfo.String())
+
+	return buffer.Bytes(), nil
+}
+
+// ===========================================================================================
+// constructQueryResponseFromIterator constructs a JSON array containing query results from
+// a given result iterator
+// ===========================================================================================
+func constructQueryResponseFromIterator(resultsIterator shim.StateQueryIteratorInterface) (*bytes.Buffer, error) {
+	// buffer is a JSON array containing QueryResults
+	var buffer bytes.Buffer
+	buffer.WriteString("[")
+
+	bArrayMemberAlreadyWritten := false
+	for resultsIterator.HasNext() {
+		queryResponse, err := resultsIterator.Next()
+		if err != nil {
+			return nil, err
+		}
+		// Add a comma before array members, suppress it for the first array member
+		if bArrayMemberAlreadyWritten == true {
+			buffer.WriteString(",")
+		}
+		buffer.WriteString("{\"Key\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(queryResponse.Key)
+		buffer.WriteString("\"")
+
+		buffer.WriteString(", \"Record\":")
+		// Record is a JSON object, so we write as-is
+		buffer.WriteString(string(queryResponse.Value))
+		buffer.WriteString("}")
+		bArrayMemberAlreadyWritten = true
+	}
+	buffer.WriteString("]")
+
+	return &buffer, nil
+}
+
+// ===========================================================================================
+// addPaginationMetadataToQueryResults adds QueryResponseMetadata, which contains pagination
+// info, to the constructed query results
+// ===========================================================================================
+func addPaginationMetadataToQueryResults(buffer *bytes.Buffer, responseMetadata *sc.QueryResponseMetadata) *bytes.Buffer {
+
+	buffer.WriteString("[{\"ResponseMetadata\":{\"RecordsCount\":")
+	buffer.WriteString("\"")
+	buffer.WriteString(fmt.Sprintf("%v", responseMetadata.FetchedRecordsCount))
+	buffer.WriteString("\"")
+	buffer.WriteString(", \"Bookmark\":")
+	buffer.WriteString("\"")
+	buffer.WriteString(responseMetadata.Bookmark)
+	buffer.WriteString("\"}}]")
+
+	return buffer
 }
 
 /*
