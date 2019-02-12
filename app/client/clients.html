@@ -109,6 +109,7 @@
           Action
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="" ng-click="beforeUpdateClient(client)">Update client</a><br/>
           <a class="dropdown-item" href="" ng-click="getClientSentParsels(client)"> View sent parsels</a><br/>
           <a class="dropdown-item" href="" ng-click="getClientReceivedParsels(client)"> View received parsels</a> <br/>
           <a class="dropdown-item" href=""> Rate history</a> <br/>
@@ -154,6 +155,7 @@
         Action
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="" ng-click="beforeUpdateClient(client)">Update client</a><br/>
         <a class="dropdown-item" href="" ng-click="getClientSentParsels(client)"> View sent parsels</a><br/>
         <a class="dropdown-item" href="" ng-click="getClientReceivedParsels(client)"> View received parsels</a> <br/>
         <a class="dropdown-item" href=""> Rate history</a> <br/>
@@ -271,17 +273,24 @@
       </tr>
     </table>
 
-
-    <div class="form-group">
-      <label>Add client into System</label><br/>
+    <div class="form-group" id="add_client_button" >
+      <input id="openClientId" type="submit" value="New client" class="btn btn-warning" ng-click="beforeAddClient()">
       <div class="alert alert-success" role="alert" id="success_add_client">
         Success! Tx ID: {{accepted_client_id}}
       </div>
+    </div>
+
+    <div class="form-group" id="add_client_panel" >
+      <label id="addClientLabel">Add client into System</label>
+      <label id="updateClientLabel">Update client</label><br/>
+    
       Name: <input class="form-control input-field" type="text" placeholder=" Ex: John" ng-model="client.name"> 
       Address: <input class="form-control input-field" type="text" placeholder=" Ex: Main str. 34" ng-model="client.address">
       Phone: <input class="form-control input-field" type="text" placeholder=" 380-45-55" ng-model="client.phone">
       Branch: <input class="form-control input-field" type="text" placeholder=" Ex: 003" ng-model="client.branchId">
       <input id="addClientId" type="submit" value="Add client" class="btn btn-warning" ng-click="addClient()">
+      <input id="updateClientId" type="submit" value="Update client" class="btn btn-warning" ng-click="updateClient()">
+      <input id="cancelClientId" type="submit" value="Cancel" class="btn btn-warning" ng-click="cancelAddClient()">
     </div>
 
       <div class="dropdown dropup">
