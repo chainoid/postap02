@@ -228,6 +228,44 @@ func (s *SmartContract) addClient(APIstub shim.ChaincodeStubInterface, args []st
 */
 func (s *SmartContract) updateClient(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
+
+
+	if len(args) != 5 {
+		return shim.Error("Incorrect number of arguments. Expecting 5")
+	}
+
+	clientAsBytes, _ := APIstub.GetState(args[0])
+	if clientAsBytes == nil {
+
+        fmt.Printf("- updateClient with id: %s Client not found \n", args[0])
+
+		return shim.Error("Client not found")
+	}
+	client := Client{}
+
+	json.Unmarshal(clientAsBytes, &client)
+
+
+	// Update client fields
+	client.Name = args[1]
+	client.Address = args[2]
+	client.Phone = args[3]
+	client.BranchId = args[4]
+
+	clientAsBytes, _ = json.Marshal(client)
+	err := APIstub.PutState(args[0], clientAsBytes)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to update client with Id: %s", args[0]))
+	}
+
+	fmt.Printf("- updateClient:\n%s\n", clientAsBytes)
+
+	return shim.Success(nil)
+
+
+
+
+
 	// startKey := "0"
 	// endKey := "9999"
 

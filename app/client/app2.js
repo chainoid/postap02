@@ -19,6 +19,7 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#add_client_button").show();
 	$("#add_client_panel").hide();
 	$("#success_add_client").hide();
+	$("#success_update_client").hide();
 
 	$("#client_sent_parsels").hide();
 	$("#error_no_sent_data_found").hide();
@@ -101,6 +102,8 @@ app.controller('appController', function ($scope, appFactory) {
 
 		$("#addClientId").show();
 		$("#updateClientId").hide();
+
+		$scope.client = null;
 	}
 
 	$scope.cancelAddClient = function () {
@@ -115,6 +118,8 @@ app.controller('appController', function ($scope, appFactory) {
 			$scope.accepted_client_id = data;
 			$("#success_add_client").show();
 			$("#add_client_panel").hide();
+
+			$("#add_client_button").show();
 		});
 	}
 
@@ -135,13 +140,13 @@ app.controller('appController', function ($scope, appFactory) {
 
 	$scope.updateClient = function ()  {
 
-		appFactory.addClient($scope.client, function(data){
+		appFactory.updateClient($scope.client, function(data){
 			$scope.accepted_client_id = data;
-			$("#success_add_client").show();
+			$("#add_client_button").show();
+			$("#success_update_client").show();
 			$("#add_client_panel").hide();
 		});
 	}
-
 
 
 
@@ -323,6 +328,16 @@ app.factory('appFactory', function ($http) {
 			callback(output)
 		});
 	}
+
+	factory.updateClient = function (data, callback) {
+
+		var client = data.Key + "-" + data.name + "-" + data.address + "-" + data.phone + "-" + data.branchId;
+
+		$http.get('/update_client/' + client).success(function (output) {
+			callback(output)
+		});
+	}
+
 
 	factory.clientSentParsels = function (name, callback) {
 		
