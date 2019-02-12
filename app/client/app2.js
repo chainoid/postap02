@@ -16,7 +16,7 @@ app.controller('appController', function ($scope, appFactory) {
 	$("#ranged_clients").hide();
 	
 
-	$("#add_client_button").show();
+	$("#new_client_button_panel").show();
 	$("#add_client_panel").hide();
 	$("#success_add_client").hide();
 	$("#success_update_client").hide();
@@ -47,6 +47,8 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#header_history").hide();
 				$("#client_history_header").hide();
 				$("#client_history").hide();
+				$("#success_add_client").hide();
+				$("#success_update_client").hide();
 
 			var array = [];
 			for (var i = 0; i < data.length; i++) {
@@ -78,6 +80,8 @@ app.controller('appController', function ($scope, appFactory) {
 				$("#header_history").hide();
 				$("#client_history_header").hide();
 				$("#client_history").hide();
+				$("#success_add_client").hide();
+				$("#success_update_client").hide();
 
 			var array = [];
 			for (var i = 0; i < data.length; i++) {
@@ -97,9 +101,8 @@ app.controller('appController', function ($scope, appFactory) {
 		
 		$("#addClientLabel").show();
 		$("#updateClientLabel").hide();
-		$("#add_client_button").hide();
+		$("#new_client_button_panel").hide();
 		$("#add_client_panel").show();
-
 		$("#addClientId").show();
 		$("#updateClientId").hide();
 
@@ -108,8 +111,12 @@ app.controller('appController', function ($scope, appFactory) {
 
 	$scope.cancelAddClient = function () {
 
-		$("#add_client_button").show();
+		$("#new_client_button_panel").show();
 		$("#add_client_panel").hide();
+
+		$("#success_add_client").hide();
+		$("#success_update_client").hide();
+
 	}
 
     $scope.addClient = function () {
@@ -119,7 +126,7 @@ app.controller('appController', function ($scope, appFactory) {
 			$("#success_add_client").show();
 			$("#add_client_panel").hide();
 
-			$("#add_client_button").show();
+			$("#new_client_button_panel").show();
 		});
 	}
 
@@ -128,7 +135,7 @@ app.controller('appController', function ($scope, appFactory) {
 		
 		$("#addClientLabel").hide();
 		$("#updateClientLabel").show();
-		$("#add_client_button").hide();
+		$("#new_client_button_panel").hide();
 
 		$("#addClientId").hide();
 		$("#updateClientId").show();
@@ -142,7 +149,7 @@ app.controller('appController', function ($scope, appFactory) {
 
 		appFactory.updateClient($scope.client, function(data){
 			$scope.accepted_client_id = data;
-			$("#add_client_button").show();
+			$("#new_client_button_panel").show();
 			$("#success_update_client").show();
 			$("#add_client_panel").hide();
 		});
