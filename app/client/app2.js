@@ -116,7 +116,6 @@ app.controller('appController', function ($scope, appFactory) {
 
 		$("#success_add_client").hide();
 		$("#success_update_client").hide();
-
 	}
 
     $scope.addClient = function () {
@@ -154,7 +153,6 @@ app.controller('appController', function ($scope, appFactory) {
 			$("#add_client_panel").hide();
 		});
 	}
-
 
 
     $scope.getClientSentParsels = function (client) {
